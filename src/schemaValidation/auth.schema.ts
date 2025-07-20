@@ -1,0 +1,56 @@
+import { z } from "zod";
+
+const passwordSchema = z.coerce
+  .string()
+  .min(8, "At least 8 characters")
+  .regex(/[a-z]/, "At least one lowercase letter")
+  .regex(/[A-Z]/, "At least one uppercase letter")
+  .regex(/[0-9]/, "At least one number")
+  .regex(/[^a-zA-Z0-9]/, "At least one special symbol");
+
+export const RegisterBody = z
+  .object({
+    fullName: z.string().min(1, "Full name is required"),
+    email: z.email("Invalid email address"),
+    password: passwordSchema,
+    confirmPassword: z.string().min(1, "Confirm password is required"),
+  })
+  .strict()
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+export type RegisterBodyType = z.infer<typeof RegisterBody>;
+
+export const LoginBody = z
+  .object({
+    email: z.email("Invalid email address"),
+    password: z.coerce.string().min(1, "Password is required")
+  })
+  .strict();
+export type LoginBodyType = z.infer<typeof LoginBody>;
+
+export const ForgotPasswordBody = z
+  .object({
+    email: z.email("Invalid email address")
+  })
+  .strict();
+export type ForgotPasswordBodyType = z.infer<typeof ForgotPasswordBody>;
+
+export const ResetPasswordBody = z
+  .object({
+    otp: z.coerce.string().min(1, "OTP is required"),
+    password: passwordSchema,
+    confirmPassword: z.coerce.string()
+  })
+  .strict()
+  .check((ctx) => {
+    if (ctx.value.password !== ctx.value.confirmPassword) {
+      ctx.issues.push({
+        code: "custom",
+        message: `Password does not match`,
+        input: ctx.value.confirmPassword
+      });
+    }
+  });
+export type ResetPasswordBodyType = z.infer<typeof ResetPasswordBody>;

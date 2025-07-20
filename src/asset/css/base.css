@@ -1,0 +1,24 @@
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+  }
+
+  .container-custom {
+    @apply px-3 sm:px-7 md:px-9 lg:px-12
+  }
+
+  .container-custom-sm {
+    @apply px-2 sm:px-5 md:px-7 lg:px-9
+  }
+}
