@@ -1,8 +1,5 @@
-"use client";
-
-import SubmitButton from '@/components/admin/SubmitButton';
-import { Checkbox } from '@/components/ui/checkbox';
 import React from 'react';
+import LoginForm from './loginForm';
 
 function LoginPage() {
 
@@ -26,62 +23,8 @@ function LoginPage() {
               Use <strong className="font-semibold">admin@gmail.com</strong> with password <strong className="font-semibold">Test@123</strong>
             </p>
           </div>
-          <form className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="label-custom"
-              >
-                Email
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  defaultValue={'admin@gmail.com'}
-                  required
-                  className="input-custom"
-                  placeholder="you@example.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="label-custom"
-              >
-                Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  defaultValue={'Test@123'}
-                  required
-                  className="input-custom"
-                  placeholder="••••••••"
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Checkbox id='remember-me' />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-primary"
-                >
-                  Remember me
-                </label>
-              </div>
-            </div>
-
-            <SubmitButton className='w-full' />
-          </form>
+          
+          <LoginForm/>
         </div>
       </div>
     </>

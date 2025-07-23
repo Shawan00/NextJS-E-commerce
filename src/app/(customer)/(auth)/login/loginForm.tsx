@@ -4,12 +4,26 @@ import { useState } from "react";
 import Link from "next/link";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { Eye, EyeClosed } from "lucide-react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginBody, LoginBodyType } from "@/schemaValidation/auth.schema";
+import { customerLogin } from "@/service/auth";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(LoginBody),
+    mode: "onChange",
+    reValidateMode: "onBlur"
+  })
+
   return (
-    <form action="#">
+    <form onSubmit={handleSubmit(customerLogin)}>
       <div className="mb-4">
         <label
           htmlFor="email"
@@ -20,11 +34,16 @@ const LoginForm = () => {
         <input
           type="email"
           id="email"
-          name="email"
           placeholder="test@example.com"
           autoComplete="email"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+          {...register('email')}
         />
+        {errors.email && (
+          <p className="text-[var(--tertiary)] text-sm mt-1">
+            {errors.email.message}
+          </p>
+        )}
       </div>
 
       <div className="mb-6">
@@ -46,9 +65,9 @@ const LoginForm = () => {
           <input
             type={showPassword ? "text" : "password"}
             id="password"
-            name="password"
             placeholder="••••••••"
             autoComplete="current-password"
+            {...register("password")}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg"
           />
           <button
@@ -63,9 +82,18 @@ const LoginForm = () => {
             )}
           </button>
         </div>
+        {errors.password && (
+          <p className="text-[var(--tertiary)] text-sm mt-1">
+            {errors.password.message}
+          </p>
+        )}
       </div>
 
-      <SubmitButton label="Login" className="w-full"/>
+      <SubmitButton 
+        label="Login"
+        pending={isSubmitting}
+        className="w-full"
+      />
     </form>
   );
 };

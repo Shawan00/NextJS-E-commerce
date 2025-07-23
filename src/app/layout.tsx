@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 const jost = Jost({
   variable: "--font-jost",
   subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {

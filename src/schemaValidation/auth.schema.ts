@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const passwordSchema = z.coerce
+const passwordSchema = z
   .string()
   .min(8, "At least 8 characters")
   .regex(/[a-z]/, "At least one lowercase letter")
@@ -25,9 +25,9 @@ export type RegisterBodyType = z.infer<typeof RegisterBody>;
 export const LoginBody = z
   .object({
     email: z.email("Invalid email address"),
-    password: z.coerce.string().min(1, "Password is required")
+    password: z.string().min(1, "Password is required")
   })
-  .strict();
+  .strip();
 export type LoginBodyType = z.infer<typeof LoginBody>;
 
 export const ForgotPasswordBody = z
@@ -54,3 +54,48 @@ export const ResetPasswordBody = z
     }
   });
 export type ResetPasswordBodyType = z.infer<typeof ResetPasswordBody>;
+
+export const Customer = z.object({
+  id: z.coerce.number(),
+  email: z.email(),
+  fullName: z.string(),
+  phone: z.string().nullable(),
+  avatar: z.url().nullable(),
+  address: z.string().nullable(),
+}).strip();
+export const CustomerLoginRes = z
+  .object({
+    customer: Customer,
+    message: z.string()
+  })
+  .strip();
+export type CustomerLoginResType = z.infer<typeof CustomerLoginRes>
+
+export const Admin = z
+  .object({
+    id: z.coerce.number(),
+    email: z.email(),
+    fullName: z.string(),
+    phone: z.string().nullable().optional(),
+    avatar: z.url().nullable(),
+    position: z.string().nullable(),
+  }).strip();
+export const AdminLoginRes = z
+  .object({
+    admin: Admin,
+    message: z.string()
+  })
+  .strip();
+export type AdminLoginResType = z.infer<typeof AdminLoginRes>
+
+export const RegisterRes = z
+  .object({
+    customer: z.object({
+      id: z.coerce.number(),
+      email: z.email(),
+      fullName: z.string(),
+    }).strip(),
+    message: z.string()
+  })
+  .strip();
+export type RegisterResType = z.infer<typeof RegisterRes>

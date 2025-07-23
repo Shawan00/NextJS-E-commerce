@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import * as React from "react"
 import {
@@ -21,13 +21,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useRouter } from "next/navigation";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Products",
@@ -97,8 +93,36 @@ const data = {
   navSecondary: [],
   projects: []
 }
+interface User{
+  name: string,
+  email: string,
+  avatar: string
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const router = useRouter();
+  const [currentUser, setCurrentUser] = React.useState<User | null>(null)
+
+  React.useEffect(() => {
+    const get = async () => {
+      const res = await fetch("/api/get-cookie/admin", {
+        method: "GET"
+      });
+      if(!res.ok) {
+        router.push("/admin/login");
+        return;
+      }
+      const response = await res.json();
+      const data = JSON.parse(response)
+      setCurrentUser({
+        name: data.fullName,
+        avatar: data.avatar,
+        email: data.email
+      })
+    }
+    get()
+  }, [])
+
   return (
     <Sidebar
       collapsible="icon"
@@ -128,7 +152,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        {currentUser && <NavUser user={currentUser} />}
       </SidebarFooter>
     </Sidebar>
   )

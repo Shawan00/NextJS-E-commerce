@@ -9,6 +9,7 @@ import {
   RegisterBody,
   RegisterBodyType,
 } from "@/schemaValidation/auth.schema";
+import { customerRegister } from "@/service/auth";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const validatePasswordConditions = {
@@ -26,20 +27,15 @@ function RegistrationForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-    reset,
+    formState: { errors, isSubmitting },
   } = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     mode: "onChange",
     reValidateMode: "onBlur",
   });
 
-  const onSubmit = async (data: RegisterBodyType) => {
-    console.log("Form submitted with data:", data);
-  }
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(customerRegister)}>
       <div className="mb-4">
         <label htmlFor="fullName" className="label-custom">
           Full Name
@@ -151,7 +147,10 @@ function RegistrationForm() {
         )}
       </div>
 
-      <SubmitButton label="Register" className="w-full" />
+      <SubmitButton
+        label="Register"
+        pending={isSubmitting}
+        className="w-full" />
     </form>
   );
 };

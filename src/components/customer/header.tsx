@@ -278,9 +278,9 @@ export default function Header() {
           <Link href={"/"} className="text-muted-foreground hover:text-foreground">
             <Search />
           </Link>
-          <Link href={"/"} className="text-muted-foreground hover:text-foreground">
+          <button className="text-muted-foreground hover:text-foreground">
             <User />
-          </Link>
+          </button>
           <Link href={"/"} className="text-muted-foreground hover:text-foreground">
             <ShoppingCart />
           </Link>

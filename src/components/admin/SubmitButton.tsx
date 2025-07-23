@@ -1,18 +1,16 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
 export default function SubmitButton({
-  label = "Submit", className, isDisabled
+  label = "Submit", className, isDisabled, pending
 }: {
   label?: string;
   className?: string;
   isDisabled?: boolean;
+  pending?: boolean
 }) {
-
-  const {pending} = useFormStatus();
 
   return (
     <Button
