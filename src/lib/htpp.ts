@@ -34,11 +34,11 @@ const request = async<Response>(
 export const http = {
   get<Response>(
     url: string,
-    params: Record<string, any>
+    params?: Record<string, any>
   ) {
     const queryString = new URLSearchParams();
 
-    Object.entries(params).forEach(([key, value]) => {
+    Object.entries(params || {}).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach(v => queryString.append(key, v.toString()));
       } else {
