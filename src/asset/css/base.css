@@ -14,7 +14,11 @@
     display: none;  /* Chrome, Safari, Opera */
   }
 
-  .container-custom {
+  .container-custom-lg {
+    @apply px-2 sm:px-12 md:px-16 xl:px-48
+  }
+
+  .container-custom { 
     @apply px-3 sm:px-7 md:px-9 lg:px-12
   }
 

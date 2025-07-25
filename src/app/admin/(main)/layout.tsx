@@ -16,7 +16,7 @@ export default function AdminLayout({children}: {children: React.ReactNode}) {
         <SiteHeader />
         <div className="flex flex-1">
           <AppSidebar />
-          <SidebarInset>
+          <SidebarInset className="p-5">
             {children}
           </SidebarInset>
         </div>

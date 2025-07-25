@@ -1,3 +1,5 @@
+import { CategoryType, FlattenCategoryType } from "@/schemaValidation/category.schema";
+
 export const capitalizeFirstLetter = (str: string): string => {
   if (!str) return '';
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -52,3 +54,29 @@ export const formatNumberWithDots = (number: number): string => {
   if (isNaN(number)) return String(number);
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const flattenCategories = (
+  categories: CategoryType[],
+  parent?: { id: number, name: string, thumbnail: string, level: number },
+): FlattenCategoryType[] => {
+  const result: FlattenCategoryType[] = [];
+
+  for (const category of categories) {
+    const { id, name, thumbnail, subCategories } = category;
+
+    const flatCategory: FlattenCategoryType = {
+      id,
+      name,
+      thumbnail,
+      level: parent ? parent.level + 1 : 0,
+    };
+
+    result.push(flatCategory);
+
+    if (subCategories && subCategories.length > 0) {
+      result.push(...flattenCategories(subCategories, { id, name, thumbnail, level: parent ? parent.level + 1 : 0 }));
+    }
+  }
+
+  return result;
+}

@@ -114,15 +114,15 @@ export default function Header() {
               ) : (
                 <>
                   <DropdownMenuItem asChild>
-                    <Link href="/login" className="cursor-pointer">
-                      <LogIn className="mr-2 h-4 w-4" />
-                      <span>Đăng nhập</span>
+                    <Link href="/login" className="cursor-pointer flex items-center gap-2">
+                      <LogIn className="h-4 w-4" />
+                      <span>Login</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/register" className="cursor-pointer">
-                      <UserPlus className="mr-2 h-4 w-4" />
-                      <span>Đăng ký</span>
+                    <Link href="/register" className="cursor-pointer flex items-center gap-2">
+                      <UserPlus className="h-4 w-4" />
+                      <span>Register</span>
                     </Link>
                   </DropdownMenuItem>
                 </>
