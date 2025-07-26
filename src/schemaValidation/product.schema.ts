@@ -14,8 +14,10 @@ export const ProductSchema = z.object({
   price: z.number(),
   stock: z.number(),
   description: z.string(),
+  discountPercent: z.number(),
   images: z.array(ImageSchema),
   categories: z.array(CategorySchema),
+  createdAt: z.string(),
 }).strip()
 export type ProductType = z.infer<typeof ProductSchema>;
 
@@ -26,8 +28,10 @@ export const ProductBody = z.object({
   price: z.number().min(1, { message: "Price is required" }),
   stock: z.number().min(1, { message: "Stock is required" }),
   description: z.string().optional(),
+  discountPercent: z.number().min(0, { message: "Discount percent must be at least 0" }).max(100, { message: "Discount percent cannot exceed 100" }),
   images: z.array(z.instanceof(File, { message: "Please select a valid image file" })),
   categories: z.array(z.number()),
+  createdAt: z.string(),
 }).strip();
 export type ProductBodyType = z.infer<typeof ProductBody>;
 
@@ -42,9 +46,9 @@ export type ProductResponseType = z.infer<typeof ProductResponse>;
 export const ProductParams = z.object({
   page: z.number().optional(),
   pageSize: z.number().optional(),
-  search: z.string().optional(),
+  name: z.string().optional(),
   category: z.string().optional(),
-  sortField: z.string().optional(),
+  sortField: z.enum(['createdAt', 'name', 'price', 'stock', 'discountPercent']).optional(),
   sortBy: z.enum(['asc', 'desc']).optional(),
 })
 export type ProductParamsType = z.infer<typeof ProductParams>;

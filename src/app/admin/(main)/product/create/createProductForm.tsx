@@ -131,6 +131,7 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
         price: data.price,
         stock: data.stock,
         description: data.description || "",
+        discountPercent: data.discountPercent,
         images: imageUrls,
         categories: selectedCategories
       };
@@ -206,6 +207,22 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
             min="1"
           />
           {errors.stock && <p className="error-message">{errors.stock.message}</p>}
+        </div>
+
+        {/* Discount Percent */}
+        <div>
+          <label htmlFor="discountPercent" className="label-custom mb-1">Discount Percent (%)</label>
+          <input
+            type="number"
+            id="discountPercent"
+            {...register("discountPercent", { valueAsNumber: true })}
+            className="input-custom"
+            placeholder="0"
+            min="0"
+            max="100"
+            step="0.1"
+          />
+          {errors.discountPercent && <p className="error-message">{errors.discountPercent.message}</p>}
         </div>
 
         {/* Description */}
@@ -361,14 +378,14 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
           {imagePreviews.length > 0 && (
             <div className="mt-2 grid grid-cols-4 gap-2">
               {imagePreviews.map((preview, index) => (
-                <div key={index} className="relative">
+                <div key={index} className="relative w-fit">
                   <Image src={preview} alt={`preview-${index}`} width={150} height={150} className="rounded-sm object-cover" />
                   <button
                     type="button"
                     onClick={() => removeImagePreview(index)}
-                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                    className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/4 bg-[var(--tertiary)]/90 text-white rounded-full p-1 hover:bg-[var(--tertiary)]"
                   >
-                    <X className="h-3 w-3" />
+                    <X className="h-3 w-3" strokeWidth={3} />
                   </button>
                 </div>
               ))}
