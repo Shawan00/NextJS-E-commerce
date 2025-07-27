@@ -23,7 +23,7 @@ export default function SubmitButton({
     >
       {pending ? (
         <>
-          <Loader2 className="animated-spin"/>
+          <Loader2 className="animate-spin pointer-events-none"/>
           <span>Please wait</span>
         </>
       ) : (

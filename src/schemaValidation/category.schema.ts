@@ -34,6 +34,13 @@ export const CategoryBody = z.object({
 }).strip();
 export type CategoryBodyType = z.infer<typeof CategoryBody>;
 
+export const CategoryEditBody = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  thumbnail: z.instanceof(File, { message: "Please select a valid image file" }).optional(),
+  parentId: z.number().optional(),
+}).strip();
+export type CategoryEditBodyType = z.infer<typeof CategoryEditBody>;
+
 export const CategoryResponse = z.object({
   total: z.number(),
   page: z.number(),

@@ -1,7 +1,7 @@
 "use server";
 
 import { http } from "@/lib/htpp";
-import { ProductBodyType, ProductParamsType, ProductResponseType, ProductSchema, ProductType } from "@/schemaValidation/product.schema";
+import { ProductBodyType, ProductEditBodyType, ProductParamsType, ProductResponseType, ProductSchema, ProductType, ProductUpdateDataType } from "@/schemaValidation/product.schema";
 
 export const createProduct = async (productData: Omit<ProductBodyType, 'thumbnail' | 'images'> & { 
   thumbnail: string; 
@@ -24,3 +24,33 @@ export const getProducts = async (params?: ProductParamsType): Promise<ProductRe
   }
   return null;
 };
+
+export const getProductById = async (id: number): Promise<ProductType | null> => {
+  const res = await http.get<ProductType>(`/products/${id}`);
+
+  if (res.status === 200) {
+    return ProductSchema.parse(res.payload);
+  }
+  return null;
+}
+
+export const updateProduct = async (id: number, productData: ProductUpdateDataType): Promise<{ success: boolean, message?: string }> => {
+  const res = await http.patch<ProductType>(`/products/${id}`, productData);
+
+  if (res.status === 200) {
+    return { success: true }
+  }
+  if ('message' in res.payload) {
+    return { success: false, message: res.payload.message }
+  }
+  return { success: false, message: 'Failed to update product' }
+}
+
+export const deleteProduct = async (id: number): Promise<{ success: boolean, message?: string }> => {
+  const res = await http.delete<{message: string }>(`/products`, id);
+  console.log(res);
+  if (res.status === 200) {
+    return { success: true }
+  }
+  return { success: false, message: res.payload.message || 'Failed to delete product' }
+}

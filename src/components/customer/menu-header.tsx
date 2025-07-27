@@ -69,7 +69,7 @@ export default function MenuHeader() {
                         <ul className="flex gap-4">
                           {category.subCategories?.map((subCategory) => (
                             <li key={subCategory.id}
-                              className="flex-1 flex flex-col gap-2 w-22 text-sm"
+                              className="flex-1 flex flex-col gap-2 w-28 text-sm"
                             >
                               <Link href={`/categories/${subCategory.id}`}
                                 className="py-2 font-medium text-accent border-b mb-2"
@@ -78,7 +78,7 @@ export default function MenuHeader() {
                               </Link>
                               {subCategory.subCategories?.map((subSubCategory) => (
                                 <Link key={subSubCategory.id} href={`/categories/${subSubCategory.id}`}
-                                  className="text-sm text-primary hover:text-accent/80 transition-colors"
+                                  className="text-sm text-primary hover:text-accent transition-colors"
                                 >
                                   {subSubCategory.name}
                                 </Link>

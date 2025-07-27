@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Jost } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
+import { ReduxProvider } from "@/store/provider";
 
 const jost = Jost({
   variable: "--font-jost",
@@ -10,8 +11,8 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Home page | Furniture Store",
-  description: "A simple furniture store built with Next.js",
+  title: "Home page | FurStore",
+  description: "FurStore is a platform for selling luxury furniture products",
 };
 
 export default function RootLayout({
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${jost.variable} antialiased`}>
-        <ToastContainer/>
-        {children}
+        <ReduxProvider>
+          <ToastContainer/>
+          {children}
+        </ReduxProvider>
       </body>
     </html>
   );

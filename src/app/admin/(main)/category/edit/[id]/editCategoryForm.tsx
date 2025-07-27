@@ -6,20 +6,26 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { flattenCategories } from "@/helper/general";
 import { showToast } from "@/helper/toast";
-import { http } from "@/lib/htpp";
-import { CategoryBody, CategoryBodyType, CategoryType } from "@/schemaValidation/category.schema";
+import { CategoryEditBody, CategoryEditBodyType, CategoryType } from "@/schemaValidation/category.schema";
 import { uploadFile } from "@/service/uploadFile";
-import { setBreadcrumb } from "@/store/features/breadcrumbSlice";
+import { updateCategory } from "@/service/category";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
+import { setBreadcrumb } from "@/store/features/breadcrumbSlice";
 
-function CreateCategoryForm({ initialCategories }: { initialCategories: CategoryType[] }) {
+interface EditCategoryFormProps {
+  initialCategory: CategoryType;
+  initialCategories: CategoryType[];
+}
+
+function EditCategoryForm({ initialCategory, initialCategories }: EditCategoryFormProps) {
   const categories = flattenCategories(initialCategories);
+  const router = useRouter();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setBreadcrumb([
@@ -31,24 +37,27 @@ function CreateCategoryForm({ initialCategories }: { initialCategories: Category
         href: '/admin/category'
       },
       {
-        label: 'Create Category'
+        label: 'Edit Category'
       }
     ]));
-  }, [dispatch]);
-  const router = useRouter();
+  }, []);
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isSubmitting },
     reset
-  } = useForm<CategoryBodyType>({
-    resolver: zodResolver(CategoryBody),
+  } = useForm<CategoryEditBodyType>({
+    resolver: zodResolver(CategoryEditBody),
     mode: "onChange",
-    reValidateMode: "onBlur"
+    reValidateMode: "onBlur",
+    defaultValues: {
+      name: initialCategory.name
+    }
   });
 
-  const [thumbnail, setThumbnail] = useState<string | null>(null);
+  const [thumbnail, setThumbnail] = useState<string | null>(initialCategory.thumbnail || null);
+  const [isNewImage, setIsNewImage] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -56,6 +65,7 @@ function CreateCategoryForm({ initialCategories }: { initialCategories: Category
     if (file) {
       // Set value to react-hook-form
       setValue("thumbnail", file, { shouldValidate: true });
+      setIsNewImage(true);
 
       // Create preview
       if (file.type.startsWith('image/')) {
@@ -66,44 +76,50 @@ function CreateCategoryForm({ initialCategories }: { initialCategories: Category
         reader.readAsDataURL(file);
       }
     } else {
-      setThumbnail(null);
+      setThumbnail(initialCategory.thumbnail || null);
+      setIsNewImage(false);
     }
   };
 
   const [open, setOpen] = useState(false);
-  const [parentId, setParentId] = useState<number | null>(null);
+  const [parentId, setParentId] = useState<number | null>(initialCategory.parentId || null);
 
-  const onSubmit = async (data: CategoryBodyType) => {
-    try {      
+  // Set initial form values
+  useEffect(() => {
+    setValue("name", initialCategory.name);
+    setThumbnail(initialCategory.thumbnail || null);
+    setParentId(initialCategory.parentId || null);
+  }, [initialCategory, setValue]);
+
+  const onSubmit = async (data: CategoryEditBodyType) => {
+    let thumbnailUrl = initialCategory.thumbnail;
+
+    // Only upload new image if user selected a new one
+    if (isNewImage && data.thumbnail) {
       const formData = new FormData();
       formData.append('files', data.thumbnail);
       const imageUrls = await uploadFile(formData);
-      
+
       if (!imageUrls || imageUrls.length === 0) {
         throw new Error("Failed to upload image to Cloudinary");
       }
-      
-      const thumbnailUrl = imageUrls[0];
-      
-      const categoryData = {
-        name: data.name,
-        thumbnail: thumbnailUrl,
-        parentId: parentId || undefined
-      };
 
-      const result = await http.post('/category', categoryData);
-      if (result.status === 201) {
-        showToast('success', 'Category created successfully!');
-        setThumbnail(null);
-        setParentId(null);
-        reset();
-        router.refresh();    
-      } else {
-        showToast('error', 'Failed to create category');
-      }
-      
-    } catch (error) {
-      showToast('error', error instanceof Error ? error.message : 'Failed to create category');
+      thumbnailUrl = imageUrls[0];
+    }
+
+    const categoryData = {
+      id: initialCategory.id,
+      name: data.name,
+      thumbnail: thumbnailUrl || '',
+      parentId: parentId || 0
+    };
+
+    const result = await updateCategory(initialCategory.id, categoryData);
+    if (result.success) {
+      showToast('success', 'Category updated successfully!');
+      router.push('/admin/category');
+    } else {
+      showToast('error', result.message || 'Failed to update category');
     }
   };
 
@@ -148,20 +164,22 @@ function CreateCategoryForm({ initialCategories }: { initialCategories: Category
                     }}>
                       None (Root Category)
                     </CommandItem>
-                    {categories.map((category) => (
-                      <CommandItem key={category.id} value={category.name}
-                        className={`${category.level === 0 ? 'font-medium' : ``}`}
-                        onSelect={() => {
-                          setParentId(category.id);
-                          setOpen(false);
-                        }}
-                      >
-                        <span style={{ paddingLeft: `${category.level * 15}px` }}>{category.name}</span>
-                        <Check
-                          className={`ml-auto ${category.id === parentId ? 'opacity-100' : 'opacity-0'}`}
-                        />
-                      </CommandItem>
-                    ))}
+                    {categories
+                      .filter(category => category.id !== initialCategory.id) // Exclude current category
+                      .map((category) => (
+                        <CommandItem key={category.id} value={category.name}
+                          className={`${category.level === 0 ? 'font-medium' : ``}`}
+                          onSelect={() => {
+                            setParentId(category.id);
+                            setOpen(false);
+                          }}
+                        >
+                          <span style={{ paddingLeft: `${category.level * 15}px` }}>{category.name}</span>
+                          <Check
+                            className={`ml-auto ${category.id === parentId ? 'opacity-100' : 'opacity-0'}`}
+                          />
+                        </CommandItem>
+                      ))}
                   </CommandGroup>
                 </CommandList>
               </Command>
@@ -199,25 +217,35 @@ function CreateCategoryForm({ initialCategories }: { initialCategories: Category
               accept="image/*"
               className="hidden"
               onChange={handleFileChange}
-              required
             />
           </label>
           {thumbnail && (
             <>
               <Image src={thumbnail} alt="thumbnail" width={150} height={203} className="rounded-sm mt-2" />
+              {isNewImage && <p className="text-sm text-blue-600 mt-1">New image selected</p>}
             </>
           )}
           {errors.thumbnail && <p className="error-message">{errors.thumbnail.message as string}</p>}
         </div>
-        <SubmitButton
-          label="Create category"
-          pending={isSubmitting}
-          className="flex ml-auto"
-        />
+
+        <div className="flex gap-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push('/admin/category')}
+            className="px-6"
+          >
+            Cancel
+          </Button>
+          <SubmitButton
+            label="Update category"
+            pending={isSubmitting}
+            className="flex ml-auto"
+          />
+        </div>
       </form>
     </div>
-
-
   )
-}export default CreateCategoryForm;
+}
 
+export default EditCategoryForm;

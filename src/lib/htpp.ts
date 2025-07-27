@@ -69,6 +69,6 @@ export const http = {
     url: string,
     id: number
   ) {
-    return request<Response>(`${url}${id}`, "DELETE")
+    return request<Response>(`${url}/${id}`, "DELETE")
   }
 }

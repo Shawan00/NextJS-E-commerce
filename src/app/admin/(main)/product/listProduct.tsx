@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown, MoreHorizontal, Edit, Trash2, ArrowUpDown } from "lucide-react";
+import { Edit, Trash2, ArrowUpDown, MoreVertical } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,10 +43,15 @@ import {
   PaginationNext,
   PaginationPrevious,
   PaginationEllipsis,
-  } from "@/components/ui/pagination";
+} from "@/components/ui/pagination";
 import { ProductType, ProductParamsType } from "@/schemaValidation/product.schema";
-import { formatDateToString, formatNumberWithDots } from "@/helper/general";
+import { formatDateToString, formatNumberWithDots, resizeImage } from "@/helper/general";
 import { getProducts } from "@/service/product";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDispatch } from "react-redux";
+import { setBreadcrumb } from "@/store/features/breadcrumbSlice";
+import DeleteProduct, { DeleteProductRef } from "./deleteProduct";
+import { useRouter } from "next/navigation";
 
 interface ListProductProps {
   initialProductResponse: {
@@ -55,11 +60,12 @@ interface ListProductProps {
     page: number;
     pageSize: number;
   } | null;
-  onEdit?: (product: ProductType) => void;
-  onDelete?: (product: ProductType) => void;
 }
 
-function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductProps) {
+function ListProduct({ initialProductResponse }: ListProductProps) {
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const [data, setData] = React.useState<ProductType[]>(initialProductResponse?.data || []);
   const [loading, setLoading] = React.useState(false);
   const [pagination, setPagination] = React.useState({
@@ -76,29 +82,47 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [reload, setReload] = React.useState(false);
+
+  const isFirstRender = React.useRef(true);
+  const deleteProductRef = React.useRef<DeleteProductRef>(null);
+
+  // Handle delete product click
+  const handleDeleteClick = React.useCallback((product: ProductType) => {
+    deleteProductRef.current?.setProduct(product);
+  }, []);
 
   // Function to fetch products from API
   const fetchProducts = React.useCallback(async (params: ProductParamsType) => {
     setLoading(true);
-    try {
-      const response = await getProducts(params);
-      if (response) {
-        setData(response.data);
-        setPagination({
-          total: response.total,
-          page: response.page,
-          pageSize: response.pageSize,
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
+    const response = await getProducts(params);
+    if (response) {
+      setData(response.data);
+      setPagination({
+        total: response.total,
+        page: response.page,
+        pageSize: response.pageSize,
+      });
     }
+    setLoading(false);
   }, []);
 
-  // Effect to fetch data when sorting or pagination changes
   React.useEffect(() => {
+    // Skip API call on first render, use initial data instead
+    if (isFirstRender.current) {
+      dispatch(setBreadcrumb([
+        {
+          label: "Management",
+        },
+        {
+          label: "Product list",
+        }
+      ]
+      ));
+      isFirstRender.current = false;
+      return;
+    }
+
     const params: ProductParamsType = {
       page: pagination.page,
       pageSize: pagination.pageSize,
@@ -116,7 +140,7 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
         'discountPercent': 'discountPercent',
         'createdAt': 'createdAt'
       };
-      
+
       const mappedField = fieldMapping[sort.id];
       if (mappedField) {
         params.sortField = mappedField as "name" | "createdAt" | "price" | "stock" | "discountPercent";
@@ -125,7 +149,7 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
     }
 
     fetchProducts(params);
-  }, [pagination.page, pagination.pageSize, sorting, fetchProducts]);
+  }, [pagination.page, pagination.pageSize, sorting, fetchProducts, reload]);
 
   const columns: ColumnDef<ProductType>[] = [
     {
@@ -136,28 +160,28 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 hover:bg-transparent"
+            className="h-auto p-0 hover:bg-transparent hover:text-primary cursor-pointer"
           >
             Product
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => {
         const product = row.original;
         const categoryNames = product.categories.map(cat => cat.name).join(", ");
-        
+
         return (
           <div className="flex items-center space-x-3">
-            <div className="w-[60px] h-[60px] rounded-md overflow-hidden bg-muted flex-shrink-0">
-              <img 
-                src={product.thumbnail} 
+            <div className="w-[80px] h-[80px] rounded-md overflow-hidden bg-muted flex-shrink-0">
+              <img
+                src={resizeImage(product.thumbnail, 80)}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="space-y-1">
-              <div className="font-medium">{product.name}</div>
+              <div className="font-medium text-base">{product.name}</div>
               <div className="text-sm text-muted-foreground">
                 {categoryNames}
               </div>
@@ -184,17 +208,17 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 hover:bg-transparent"
+            className="h-auto p-0 hover:bg-transparent hover:text-primary cursor-pointer"
           >
             Stock
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="h-4 w-4" />
           </Button>
         );
       },
       cell: ({ row }) => {
         const stock = row.getValue("stock") as number;
         return (
-          <div 
+          <div
             className={`font-medium ${stock < 5 ? 'text-[var(--tertiary)]' : ''}`}
           >
             {stock}
@@ -209,10 +233,10 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 hover:bg-transparent"
+            className="h-auto p-0 hover:bg-transparent hover:text-primary cursor-pointer"
           >
             Price
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="h-4 w-4" />
           </Button>
         );
       },
@@ -228,10 +252,10 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 hover:bg-transparent"
+            className="h-auto p-0 hover:bg-transparent hover:text-primary cursor-pointer"
           >
-            Discount (%)
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            Discount
+            <ArrowUpDown className="h-4 w-4" />
           </Button>
         );
       },
@@ -253,10 +277,10 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="h-auto p-0 hover:bg-transparent"
+            className="h-auto p-0 hover:bg-transparent hover:text-primary cursor-pointer"
           >
             Created at
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            <ArrowUpDown className="h-4 w-4" />
           </Button>
         );
       },
@@ -280,22 +304,22 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
                 <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => onEdit?.(product)}
+                onClick={() => router.push(`/admin/product/edit/${product.id}`)}
                 className="cursor-pointer"
               >
-                <Edit className="mr-2 h-4 w-4" />
+                <Edit className="h-4 w-4" />
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => onDelete?.(product)}
+                onClick={() => handleDeleteClick(product)}
                 className="cursor-pointer text-destructive focus:text-destructive"
               >
-                <Trash2 className="mr-2 h-4 w-4" />
+                <Trash2 className="h-4 w-4" color="var(--destructive)" />
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -330,7 +354,7 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
   const renderPaginationItems = () => {
     const items = [];
     const showEllipsis = totalPages > 7;
-    
+
     if (!showEllipsis) {
       // Show all pages if 7 or fewer
       for (let i = 1; i <= totalPages; i++) {
@@ -374,7 +398,7 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
       // Show pages around current page
       const start = Math.max(2, pagination.page - 1);
       const end = Math.min(totalPages - 1, pagination.page + 1);
-      
+
       for (let i = start; i <= end; i++) {
         items.push(
           <PaginationItem key={i}>
@@ -432,9 +456,9 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -448,7 +472,12 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Đang tải...
+                  <Skeleton className="h-15 w-full my-4" />
+                  <Skeleton className="h-15 w-full my-4" />
+                  <Skeleton className="h-15 w-full my-4" />
+                  <Skeleton className="h-15 w-full my-4" />
+                  <Skeleton className="h-15 w-full my-4" />
+                  <Skeleton className="h-15 w-full my-4" />
                 </TableCell>
               </TableRow>
             ) : data?.length ? (
@@ -458,9 +487,9 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
                     <TableCell key={column.id}>
                       {flexRender(
                         column.columnDef.cell,
-                        { 
-                          row: { 
-                            original: product, 
+                        {
+                          row: {
+                            original: product,
                             getValue: (key: string) => product[key as keyof ProductType],
                             id: product.id.toString(),
                             index,
@@ -484,25 +513,25 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Không có sản phẩm nào.
+                  You don't have any product yet.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      
+
       {/* Pagination Controls */}
       <div className="flex items-center justify-between space-x-2 py-4">
         <div className="flex items-center space-x-2">
-          <p className="text-sm text-muted-foreground">Hiển thị mỗi trang</p>
+          <p className="text-sm text-muted-foreground whitespace-nowrap">Show per page</p>
           <Select
             value={pagination.pageSize.toString()}
             onValueChange={(value) => {
-              setPagination(prev => ({ 
-                ...prev, 
+              setPagination(prev => ({
+                ...prev,
                 pageSize: Number(value),
-                page: 1 
+                page: 1
               }));
             }}
           >
@@ -517,12 +546,6 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
               ))}
             </SelectContent>
           </Select>
-        </div>
-        
-        <div className="flex-1 text-sm text-muted-foreground text-center">
-          Hiển thị {((pagination.page - 1) * pagination.pageSize) + 1} đến{" "}
-          {Math.min(pagination.page * pagination.pageSize, pagination.total)}{" "}
-          trong tổng số {pagination.total} sản phẩm.
         </div>
 
         <Pagination>
@@ -539,9 +562,9 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
                 className={pagination.page <= 1 ? "pointer-events-none opacity-50" : ""}
               />
             </PaginationItem>
-            
+
             {renderPaginationItems()}
-            
+
             <PaginationItem>
               <PaginationNext
                 href="#"
@@ -557,6 +580,7 @@ function ListProduct({ initialProductResponse, onEdit, onDelete }: ListProductPr
           </PaginationContent>
         </Pagination>
       </div>
+      <DeleteProduct ref={deleteProductRef} onReload={() => setReload(!reload)} />
     </div>
   );
 }
