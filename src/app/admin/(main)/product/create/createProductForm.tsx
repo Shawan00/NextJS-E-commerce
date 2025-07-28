@@ -111,10 +111,62 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     }
   };
 
+  // Hàm tìm category gốc từ initialCategories
+  const findCategoryInTree = (categoryId: number, cats: CategoryType[] = initialCategories): CategoryType | null => {
+    for (const cat of cats) {
+      if (cat.id === categoryId) {
+        return cat;
+      }
+      if (cat.subCategories) {
+        const found = findCategoryInTree(categoryId, cat.subCategories);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
+  // Hàm tìm tất cả category cha của một category
+  const findParentCategories = (categoryId: number): number[] => {
+    const parents: number[] = [];
+    const category = findCategoryInTree(categoryId);
+    if (category && category.parentId && category.id !== category.parentId) {
+      parents.push(category.parentId);
+      parents.push(...findParentCategories(category.parentId));
+    }
+    return parents;
+  };
+
+  // Hàm tìm tất cả category con của một category
+  const findChildCategories = (categoryId: number, cats: CategoryType[] = initialCategories): number[] => {
+    const children: number[] = [];
+    
+    for (const cat of cats) {
+      if (cat.parentId === categoryId) {
+        children.push(cat.id);
+        children.push(...findChildCategories(cat.id));
+      }
+      if (cat.subCategories) {
+        children.push(...findChildCategories(categoryId, cat.subCategories));
+      }
+    }
+    
+    return children;
+  };
+
   const handleCategoryToggle = (categoryId: number) => {
-    const updatedCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter(id => id !== categoryId)
-      : [...selectedCategories, categoryId];
+    let updatedCategories = [...selectedCategories];
+    
+    if (selectedCategories.includes(categoryId)) {
+      // Bỏ chọn: loại bỏ category này và tất cả category con
+      const childrenToRemove = findChildCategories(categoryId);
+      updatedCategories = updatedCategories.filter(id => 
+        id !== categoryId && !childrenToRemove.includes(id)
+      );
+    } else {
+      // Chọn: thêm category này và tất cả category cha
+      const parentsToAdd = findParentCategories(categoryId);
+      updatedCategories = [...new Set([...updatedCategories, categoryId, ...parentsToAdd])];
+    }
     
     setSelectedCategories(updatedCategories);
     setValue("categories", updatedCategories, { shouldValidate: true });
