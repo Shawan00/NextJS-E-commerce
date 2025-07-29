@@ -151,7 +151,6 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
     }
   };
 
-  // Hàm tìm category gốc từ initialCategories
   const findCategoryInTree = (categoryId: number, cats: CategoryType[] = initialCategories): CategoryType | null => {
     for (const cat of cats) {
       if (cat.id === categoryId) {
@@ -165,7 +164,6 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
     return null;
   };
 
-  // Hàm tìm tất cả category cha của một category
   const findParentCategories = (categoryId: number): number[] => {
     const parents: number[] = [];
     const category = findCategoryInTree(categoryId);
@@ -176,7 +174,6 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
     return parents;
   };
 
-  // Hàm tìm tất cả category con của một category
   const findChildCategories = (categoryId: number, cats: CategoryType[] = initialCategories): number[] => {
     const children: number[] = [];
     
@@ -197,13 +194,11 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
     let updatedCategories = [...selectedCategories];
     
     if (selectedCategories.includes(categoryId)) {
-      // Bỏ chọn: loại bỏ category này và tất cả category con
       const childrenToRemove = findChildCategories(categoryId);
       updatedCategories = updatedCategories.filter(id => 
         id !== categoryId && !childrenToRemove.includes(id)
       );
     } else {
-      // Chọn: thêm category này và tất cả category cha
       const parentsToAdd = findParentCategories(categoryId);
       updatedCategories = [...new Set([...updatedCategories, categoryId, ...parentsToAdd])];
     }
@@ -216,7 +211,6 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
     let thumbnailUrl = initialProduct.thumbnail;
     let imageUrls = initialProduct.images.map(img => img.imageUrl);
 
-    // Only upload new thumbnail if user selected a new one
     if (isNewThumbnail && data.thumbnail) {
       const thumbnailFormData = new FormData();
       thumbnailFormData.append('files', data.thumbnail);

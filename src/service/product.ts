@@ -1,19 +1,21 @@
 "use server";
 
 import { http } from "@/lib/htpp";
-import { ProductBodyType, ProductParamsType, ProductResponseType, ProductSchema, ProductType, ProductUpdateDataType } from "@/schemaValidation/product.schema";
+import { ProductBodyType, ProductParamsType, ProductResponseType, ProductType, ProductUpdateDataType } from "@/schemaValidation/product.schema";
 
 export const createProduct = async (productData: Omit<ProductBodyType, 'thumbnail' | 'images'> & { 
   thumbnail: string; 
   images: string[] 
-}): Promise<ProductType | null> => {
-  const res = await http.post<ProductResponseType>('/products', productData);
+}): Promise<{success: boolean, message?: string}> => {
+  const res = await http.post<ProductType>('/products', productData);
   
   if (res.status === 201) {
-    return ProductSchema.parse(res.payload);
+    return { success: true }
   }
-  
-  return null;
+  if ('message' in res.payload) {
+    return { success: false, message: res.payload.message }
+  }
+  return { success: false, message: 'Failed to update product' }
 };
 
 export const getProducts = async (params?: ProductParamsType): Promise<ProductResponseType | null> => {
@@ -36,7 +38,6 @@ export const getProductById = async (id: number): Promise<ProductType | null> =>
 
 export const updateProduct = async (id: number, productData: ProductUpdateDataType): Promise<{ success: boolean, message?: string }> => {
   const res = await http.patch<ProductType>(`/products/${id}`, productData);
-
   if (res.status === 200) {
     return { success: true }
   }

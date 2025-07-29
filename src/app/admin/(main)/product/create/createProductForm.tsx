@@ -207,14 +207,14 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
       };
 
       const result = await createProduct(productData);
-      if (result) {
+      if (result.success) {
         showToast('success', 'Product created successfully!');
         setThumbnail(null);
         setImagePreviews([]);
         setSelectedCategories([]);
         reset();
       } else {
-        showToast('error', 'Failed to create product');
+        showToast('error', result.message || 'Failed to create product');
       }
       
     } catch (error) {

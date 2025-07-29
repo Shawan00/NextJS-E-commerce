@@ -41,8 +41,8 @@ export const http = {
     Object.entries(params || {}).forEach(([key, value]) => {
       if (Array.isArray(value)) {
         value.forEach(v => queryString.append(key, v.toString()));
-      } else {
-        queryString.append(key, value.toString());
+      } else if (value !== null && value !== undefined) {
+        queryString.append(key, String(value));
       }
     });
     return request<Response>(`${url}?${queryString}`, "GET");

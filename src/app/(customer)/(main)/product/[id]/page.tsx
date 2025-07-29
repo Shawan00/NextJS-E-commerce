@@ -2,7 +2,6 @@ import BreadcrumbCustom from "@/components/customer/breadcrumb";
 import { getProductById } from "@/service/product";
 import { notFound } from "next/navigation";
 import ProductImages from "./productImages";
-import { Minus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 

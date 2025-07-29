@@ -483,29 +483,12 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
                   <Skeleton className="h-15 w-full my-4" />
                 </TableCell>
               </TableRow>
-            ) : data?.length ? (
-              data.map((product, index) => (
-                <TableRow key={product.id}>
-                  {table.getVisibleLeafColumns().map((column) => (
-                    <TableCell key={column.id}>
-                      {flexRender(
-                        column.columnDef.cell,
-                        {
-                          row: {
-                            original: product,
-                            getValue: (key: string) => product[key as keyof ProductType],
-                            id: product.id.toString(),
-                            index,
-                            getIsSelected: () => false,
-                            getCanSelect: () => true,
-                          },
-                          column,
-                          table,
-                          cell: { id: `${product.id}-${column.id}` },
-                          getValue: () => product[column.id as keyof ProductType],
-                          renderValue: () => product[column.id as keyof ProductType],
-                        } as unknown as Parameters<typeof flexRender>[1]
-                      )}
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>

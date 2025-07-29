@@ -34,16 +34,16 @@ function MenuHeader() {
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} text-base`}>
-              <Link href={"/"}>Home</Link>
+              <Link href={"/"} className="font-normal">HOME</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} text-base`}>
-              <Link href={"/product"}>Products</Link>
+              <Link href={"/product"} className="font-normal">PRODUCTS</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-base">Categories</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="text-base font-normal">CATEGORIES</NavigationMenuTrigger>
             <NavigationMenuContent className="!w-fit">
               {isLoading ? (
                 <div className="p-4 text-center">
@@ -96,7 +96,7 @@ function MenuHeader() {
             </NavigationMenuContent>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavigationMenuTrigger className="text-base">Other Pages</NavigationMenuTrigger>
+            <NavigationMenuTrigger className="text-base font-normal">OTHER PAGES</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="w-[200px] flex flex-col gap-4">
                 <li>

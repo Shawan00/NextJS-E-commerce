@@ -2,7 +2,7 @@ import { z } from "zod";
 
 type Category = {
   id: number;
-  parentId: number;
+  parentId: number | null;
   name: string;
   thumbnail: string;
   subCategories?: Category[];
@@ -11,7 +11,7 @@ type Category = {
 export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
   z.object({
     id: z.number(),
-    parentId: z.number(),
+    parentId: z.number().nullable(),
     name: z.string(),
     thumbnail: z.string(),
     subCategories: z.array(CategorySchema).optional(),
