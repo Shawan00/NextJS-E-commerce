@@ -63,6 +63,7 @@ export const Customer = z.object({
   avatar: z.url().nullable(),
   address: z.string().nullable(),
 }).strip();
+export type CustomerType = z.infer<typeof Customer>;
 export const CustomerLoginRes = z
   .object({
     customer: Customer,

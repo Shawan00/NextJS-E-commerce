@@ -32,7 +32,6 @@ export default function Header() {
         const response = await fetch('/api/get-cookie/customer');
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
           if (data) {
             // Parse customer data từ cookie
             const parsedData = JSON.parse(data);
@@ -133,7 +132,7 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Link href={"/"} 
+          <Link href={"/cart"} 
             className="text-muted-foreground hover:text-foreground relative"
           >
             <ShoppingCart />

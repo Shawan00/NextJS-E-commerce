@@ -5,7 +5,7 @@ const request = async<Response>(
 ) => {
   const headers: { [key: string]: string } = body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`
 
   try {

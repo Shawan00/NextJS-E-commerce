@@ -105,9 +105,9 @@ function ProductImages({ thumbnail, images }: ProductImagesProps) {
           modules={[FreeMode, Navigation, Thumbs]}
           className='w-full'
         >
-          <SwiperSlide className='relative w-full aspect-6/7 flex items-center justify-center overflow-hidden'>
+          <SwiperSlide className='relative w-full overflow-hidden'>
             <div 
-              className='relative w-full h-full cursor-zoom-in'
+              className='relative w-full aspect-square flex justify-center items-center cursor-zoom-in'
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
             >
@@ -122,7 +122,7 @@ function ProductImages({ thumbnail, images }: ProductImagesProps) {
             </div>
           </SwiperSlide>
           {images.map((image, index) => (
-            <SwiperSlide key={index} className='relative w-full aspect-6/7 flex items-center justify-center overflow-hidden'>
+            <SwiperSlide key={index} className='relative w-full aspect-square flex items-center justify-center overflow-hidden'>
               <div 
                 className='relative w-full h-full cursor-zoom-in'
                 onMouseMove={handleMouseMove}

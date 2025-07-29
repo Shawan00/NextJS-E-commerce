@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import ProductImages from "./productImages";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
+import AddToCart from "./addToCart";
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -46,7 +47,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <div className="flex items-center justify-between mb-5">
               <div className="flex flex-col gap-2">
                 <span className="text-3xl font-semibold">{new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(product.price * (1 - product.discountPercent / 100))}</span>
-                <span className="text-muted-foreground">M.R.P: <del>{new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(product.price)}</del></span>
+                {product.discountPercent && (
+                  <span className="text-muted-foreground">M.R.P: <del>{new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(product.price)}</del></span>
+                )}
               </div>
               <div>
                 {product.stock > 0 ? (
@@ -60,7 +63,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               </div>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mb-5">
               <div className="flex items-center gap-2">
                 <span className="text-lg">SKU#:</span>
                 <Badge variant={'outline'} className="text-base">{product.sku}</Badge>
@@ -70,7 +73,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 <div className="flex flex-wrap gap-1">
                   {product.categories.map((category, index) => (
                     <span key={category.id}>
-                      <Link 
+                      <Link
                         href={`/category/${category.id}`}
                         className="text-lg hover:underline transition-all duration-500"
                       >
@@ -81,8 +84,10 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   ))}
                 </div>
               </div>
-
+              <p className="text-base text-muted-foreground ">{product.description}</p>
             </div>
+            
+            <AddToCart product={product}/>
           </section>
         </div>
       </div>

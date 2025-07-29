@@ -5,7 +5,7 @@ type ToastType = 'success' | 'error' | 'info' | 'warning';
 
 export const showToast = (type: ToastType, message: string): void => {
   const options: ToastOptions = {
-    position: "top-right",
+    position: "bottom-left",
     autoClose: 3000,
     hideProgressBar: true,
     closeOnClick: true,
