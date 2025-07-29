@@ -1,7 +1,7 @@
 "use server";
 
 import { http } from "@/lib/htpp";
-import { ProductBodyType, ProductEditBodyType, ProductParamsType, ProductResponseType, ProductSchema, ProductType, ProductUpdateDataType } from "@/schemaValidation/product.schema";
+import { ProductBodyType, ProductParamsType, ProductResponseType, ProductSchema, ProductType, ProductUpdateDataType } from "@/schemaValidation/product.schema";
 
 export const createProduct = async (productData: Omit<ProductBodyType, 'thumbnail' | 'images'> & { 
   thumbnail: string; 
@@ -28,8 +28,8 @@ export const getProducts = async (params?: ProductParamsType): Promise<ProductRe
 export const getProductById = async (id: number): Promise<ProductType | null> => {
   const res = await http.get<ProductType>(`/products/${id}`);
 
-  if (res.status === 200) {
-    return ProductSchema.parse(res.payload);
+  if (res.status === 200 && 'id' in res.payload) {
+    return res.payload;
   }
   return null;
 }

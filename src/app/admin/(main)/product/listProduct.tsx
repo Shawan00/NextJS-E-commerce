@@ -52,6 +52,7 @@ import { useDispatch } from "react-redux";
 import { setBreadcrumb } from "@/store/features/breadcrumbSlice";
 import DeleteProduct, { DeleteProductRef } from "./deleteProduct";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface ListProductProps {
   initialProductResponse: {
@@ -149,7 +150,7 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
     }
 
     fetchProducts(params);
-  }, [pagination.page, pagination.pageSize, sorting, fetchProducts, reload]);
+  }, [pagination.page, pagination.pageSize, sorting, fetchProducts, reload, dispatch]);
 
   const columns: ColumnDef<ProductType>[] = [
     {
@@ -174,9 +175,11 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
         return (
           <div className="flex items-center space-x-3">
             <div className="w-[80px] h-[80px] rounded-md overflow-hidden bg-muted flex-shrink-0">
-              <img
+              <Image
                 src={resizeImage(product.thumbnail, 80)}
                 alt={product.name}
+                width={80}
+                height={80}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -501,7 +504,7 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
                           cell: { id: `${product.id}-${column.id}` },
                           getValue: () => product[column.id as keyof ProductType],
                           renderValue: () => product[column.id as keyof ProductType],
-                        } as any
+                        } as unknown as Parameters<typeof flexRender>[1]
                       )}
                     </TableCell>
                   ))}
@@ -513,7 +516,7 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  You don't have any product yet.
+                  You don&apos;t have any product yet.
                 </TableCell>
               </TableRow>
             )}

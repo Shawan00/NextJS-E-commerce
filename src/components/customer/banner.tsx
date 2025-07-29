@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useRef, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -11,11 +10,11 @@ function Banner() {
   return (
     <>
       <Swiper
-        pagination={true} modules={[Pagination]}
-        modules={[Autoplay]}
+        pagination={{ clickable: true }}
         autoplay={{ delay: 5500, disableOnInteraction: false }}
         speed={2500}
         loop={true}
+        modules={[Pagination, Autoplay]}
       >
         <SwiperSlide className='relative w-screen aspect-[21/10] flex items-center justify-center'>
           <Image

@@ -40,13 +40,12 @@ function EditCategoryForm({ initialCategory, initialCategories }: EditCategoryFo
         label: 'Edit Category'
       }
     ]));
-  }, []);
+  }, [dispatch]);
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors, isSubmitting },
-    reset
+    formState: { errors, isSubmitting }
   } = useForm<CategoryEditBodyType>({
     resolver: zodResolver(CategoryEditBody),
     mode: "onChange",

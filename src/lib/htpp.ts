@@ -1,7 +1,7 @@
 const request = async<Response>(
   url: string,
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
-  body?: Record<string, any> | undefined | FormData
+  body?: Record<string, unknown> | undefined | FormData
 ) => {
   const headers: { [key: string]: string } = body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
 
@@ -34,7 +34,7 @@ const request = async<Response>(
 export const http = {
   get<Response>(
     url: string,
-    params?: Record<string, any>
+    params?: Record<string, unknown>
   ) {
     const queryString = new URLSearchParams();
 
@@ -49,19 +49,19 @@ export const http = {
   },
   post<Response>(
     url: string,
-    body: Record<string, any> | undefined | FormData
+    body: Record<string, unknown> | undefined | FormData
   ) {
     return request<Response>(url, "POST", body);
   },
   patch<Response>(
     url: string,
-    body: Record<string, any> | undefined | FormData
+    body: Record<string, unknown> | undefined | FormData
   ) {
     return request<Response>(url, "PATCH", body);
   },
   put<Response>(
     url: string,
-    body: Record<string, any> | undefined | FormData
+    body: Record<string, unknown> | undefined | FormData
   ) {
     return request<Response>(url, "PUT", body);
   },

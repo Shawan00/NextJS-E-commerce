@@ -34,7 +34,7 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
         label: "Create product",
       }
     ]));
-  }, []);
+  }, [dispatch]);
   
   const categories = flattenCategories(initialCategories);
   const {

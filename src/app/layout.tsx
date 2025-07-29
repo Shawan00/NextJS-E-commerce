@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jost.variable} antialiased`}>
+      <body className={`${jost.className} antialiased`}>
         <ReduxProvider>
           <ToastContainer/>
           {children}

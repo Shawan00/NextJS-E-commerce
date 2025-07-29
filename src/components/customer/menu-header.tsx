@@ -1,22 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "../ui/navigation-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { CategoryType } from "@/schemaValidation/category.schema";
 import { getCategories } from "@/service/category";
 
-export default function MenuHeader() {
+function MenuHeader() {
   const [categories, setCategories] = useState<CategoryType[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsLoading(true);
         const data = await getCategories();
-        console.log(data)
         if (data) {
           setCategories(data);
         }
@@ -32,7 +30,7 @@ export default function MenuHeader() {
 
   return (
     <>
-      <NavigationMenu viewport={false}>
+      <NavigationMenu viewport={false} className="hidden lg:block">
         <NavigationMenuList>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} text-base`}>
@@ -41,7 +39,7 @@ export default function MenuHeader() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             <NavigationMenuLink asChild className={`${navigationMenuTriggerStyle()} text-base`}>
-              <Link href={"/products"}>Products</Link>
+              <Link href={"/product"}>Products</Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
@@ -114,3 +112,5 @@ export default function MenuHeader() {
     </>
   )
 }
+
+export default memo(MenuHeader);

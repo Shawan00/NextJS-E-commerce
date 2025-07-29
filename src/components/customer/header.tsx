@@ -8,6 +8,8 @@ import Logo from "./logo";
 import { Search, ShoppingCart, User, LogIn, UserPlus, Bell, History, LogOut } from "lucide-react";
 import { getAvatarFallback } from "@/helper/general";
 import MenuHeader from "./menu-header";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 
 interface CustomerData {
@@ -21,6 +23,7 @@ interface CustomerData {
 
 export default function Header() {
   const [customerData, setCustomerData] = useState<CustomerData | null>(null);
+  const cartItems = useSelector((state: RootState) => state.cart.items);
 
   useEffect(() => {
     // Kiểm tra cookie customer
@@ -62,7 +65,7 @@ export default function Header() {
         <Logo />
         <MenuHeader />
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-8">
           <Link href={"/"} className="text-muted-foreground hover:text-foreground">
             <Search />
           </Link>
@@ -130,8 +133,13 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Link href={"/"} className="text-muted-foreground hover:text-foreground">
+          <Link href={"/"} 
+            className="text-muted-foreground hover:text-foreground relative"
+          >
             <ShoppingCart />
+            <span className="absolute -top-2 -right-2 bg-accent text-secondary rounded-full w-5 h-5 flex items-center justify-center text-xs">
+              {cartItems.length}
+            </span>
           </Link>
         </div>
       </header>

@@ -1,14 +1,8 @@
+import BreadcrumbCustom from "@/components/customer/breadcrumb";
 import ProductList from "@/components/customer/productList";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { getProducts } from "@/service/product";
-import { Fragment } from "react";
 
-interface Breadcrumb {
-  label: string;
-  href?: string;
-}
-
-const breadcrumb: Breadcrumb[] = [
+const breadcrumb = [
   {
     label: "Home",
     href: "/",
@@ -29,22 +23,7 @@ export default async function ProductsPage() {
   return (
     <div className="bg-secondary-background pt-5 pb-10">
       <div className="container-custom-lg ">
-        <Breadcrumb className="mb-5">
-          <BreadcrumbList>
-            {breadcrumb.map((item, index) => (
-              <Fragment key={index}>
-                {index > 0 && <BreadcrumbSeparator />}
-                <BreadcrumbItem>
-                  {item.href ? (
-                    <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
-                  ) : (
-                    <BreadcrumbPage>{item.label}</BreadcrumbPage>
-                  )}
-                </BreadcrumbItem>
-              </Fragment>
-            ))}
-          </BreadcrumbList>
-        </Breadcrumb>
+        <BreadcrumbCustom breadcrumb={breadcrumb} />
       </div>
       <h1 className="text-4xl font-bold pb-5 mb-5 text-center border-b border-secondary-foreground">Modern furniture</h1>
       <div className="container-custom-lg">

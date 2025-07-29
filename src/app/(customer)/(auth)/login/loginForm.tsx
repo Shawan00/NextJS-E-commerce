@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import SubmitButton from "@/components/admin/SubmitButton";
 import { Eye, EyeClosed } from "lucide-react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginBody, LoginBodyType } from "@/schemaValidation/auth.schema";
+import { LoginBody } from "@/schemaValidation/auth.schema";
 import { customerLogin } from "@/service/auth";
 
 const LoginForm = () => {

@@ -10,4 +10,92 @@
   .error-message {
     @apply text-[var(--tertiary)] text-sm mt-1;
   }
+
+  .lucide-nav-button {
+    @apply absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full shadow-lg backdrop-blur-sm;
+    @apply opacity-0 transition-all duration-300 flex items-center justify-center;
+    @apply bg-white/90 hover:bg-white text-gray-700 hover:text-primary hover:scale-110;
+  }
+
+  .lucide-nav-button-minimal {
+    @apply absolute top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-lg;
+    @apply opacity-0 transition-all duration-300 flex items-center justify-center;
+    @apply bg-black/70 hover:bg-black/90 text-white hover:scale-125;
+  }
+
+  .lucide-nav-button-gradient {
+    @apply absolute top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full shadow-lg;
+    @apply opacity-0 transition-all duration-300 flex items-center justify-center;
+    @apply bg-gradient-to-br from-primary to-primary/80 text-white hover:scale-110;
+    @apply hover:from-primary/90 hover:to-primary hover:shadow-xl;
+  }
+
+  .lucide-nav-button-outline {
+    @apply absolute top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full;
+    @apply opacity-0 transition-all duration-300 flex items-center justify-center;
+    @apply bg-transparent border-2 border-white/80 text-white hover:bg-white/20 hover:scale-110;
+  }
+
+  /* Group hover to show buttons */
+  .group:hover .lucide-nav-button,
+  .group:hover .lucide-nav-button-minimal,
+  .group:hover .lucide-nav-button-gradient,
+  .group:hover .lucide-nav-button-outline {
+    @apply opacity-100;
+  }
+
+  .nav-button-left {
+    left: 12px;
+  }
+
+  .nav-button-right {
+    right: 12px;
+  }
+
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .lucide-nav-button,
+    .lucide-nav-button-gradient {
+      @apply w-9 h-9;
+    }
+    
+    .lucide-nav-button-minimal {
+      @apply w-7 h-7;
+    }
+
+    .nav-button-left {
+      left: 8px;
+    }
+
+    .nav-button-right {
+      right: 8px;
+    }
+  }
+
+  .custom-thumb-swiper img {
+    @apply cursor-pointer transition-all duration-300 ease-out;
+  }
+
+  .custom-thumb-swiper .swiper-slide::after{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    width: 0%;
+    height: 4%;
+    background-color: var(--color-accent);
+    transition: width 0.2s linear;
+  }
+
+  .custom-thumb-swiper .swiper-slide.swiper-slide-thumb-active::after {
+    width: 100%;
+    right: 0;
+  }
+
+  .custom-thumb-swiper .swiper-slide {
+    @apply opacity-70 hover:opacity-100;
+  }
+  
+  .custom-thumb-swiper .swiper-slide.swiper-slide-thumb-active {
+    @apply opacity-100;
+  }
 }

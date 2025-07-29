@@ -2,9 +2,9 @@
 
 import { ProductResponseType, ProductType } from "@/schemaValidation/product.schema";
 import { getProducts } from "@/service/product";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Loader2, ShoppingCart } from "lucide-react";
+import { Minus, ShoppingCart } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
@@ -212,9 +212,9 @@ function ProductList({ initialProducts }: ProductListProps) {
         ) : (
           <>
             {products.map(product => (
-              <Link key={product.id} href={`/products/${product.id}`}>
-                <div className="group w-full h-108 bg-background rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:scale-102 transition-all duration-300">
-                  <div className="relative w-full h-82 flex items-center justify-center">
+              <Link key={product.id} href={`/product/${product.id}`}>
+                <div className="group w-full h-fit bg-background rounded-xl overflow-hidden shadow-sm hover:shadow-lg hover:scale-102 transition-all duration-300">
+                  <div className="relative w-full aspect-3/4 flex items-center justify-center">
                     <Image
                       src={product.thumbnail}
                       alt={product.name}
@@ -223,16 +223,18 @@ function ProductList({ initialProducts }: ProductListProps) {
                       className="object-cover"
                     />
                     {product.discountPercent && (
-                      <div className="absolute top-2 right-2 bg-red-600 text-secondary px-2 py-1 rounded-full text-sm font-semibold">
-                        - {product.discountPercent}%
+                      <div className="flex items-center gap-0.5 absolute top-2 right-2 bg-red-600 text-secondary px-2 py-1 rounded-full text-sm font-semibold">
+                        <Minus className="w-2 h-2" strokeWidth={5} /> {product.discountPercent}%
                       </div>
                     )}
                     {isMobile ? (
                       <>
                         <Button
                           className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-0
-                            !bg-accent !text-secondary rounded-xs border border-accent"
-                          onClick={() => {
+                             !bg-accent !text-secondary rounded-xs border border-accent"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
                             dispatch(addToCart({ product, quantity: 1 }));
                             showToast('success', 'Product added to cart');
                           }}
@@ -244,8 +246,10 @@ function ProductList({ initialProducts }: ProductListProps) {
                     ) : (
                       <Button
                         className="absolute bottom-4 left-1/2 transform -translate-x-1/2 translate-y-1/2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100
-                        !bg-accent !text-secondary rounded-xs border border-accent transition-all duration-300 ease-in-out cursor-pointer"
-                        onClick={() => {
+                         !bg-accent !text-secondary rounded-xs border border-accent transition-all duration-300 ease-in-out cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
                           dispatch(addToCart({ product, quantity: 1 }));
                           showToast('success', 'Product added to cart');
                         }}
@@ -256,7 +260,7 @@ function ProductList({ initialProducts }: ProductListProps) {
                     )}
 
                   </div>
-                  <div className="px-4 py-3">
+                  <div className="px-4 py-3 h-28">
                     <span className="text-xs mb-2 text-muted-foreground">{product.sku}</span>
                     <h2 className="text-lg font-bold">{product.name}</h2>
                     <div className="flex items-center gap-2 justify-end">

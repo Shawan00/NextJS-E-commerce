@@ -121,7 +121,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       })
     }
     get()
-  }, [])
+  }, [router])
 
   return (
     <Sidebar

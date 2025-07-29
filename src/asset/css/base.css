@@ -13,6 +13,10 @@
     display: none;  /* Chrome, Safari, Opera */
   }
 
+  .container-custom-xl {
+    @apply px-2 sm:px-7 md:px-9 xl:px-48
+  }
+
   .container-custom-lg {
     @apply px-2 sm:px-7 md:px-9 xl:px-35
   }
@@ -24,4 +28,5 @@
   .container-custom-sm {
     @apply px-2 sm:px-5 md:px-7 lg:px-9
   }
+
 }

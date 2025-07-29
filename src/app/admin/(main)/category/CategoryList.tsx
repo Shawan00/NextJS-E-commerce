@@ -22,7 +22,7 @@ interface CategoryAccordionItemProps {
 function CategoryAccordionItem({ category, level, onDelete }: CategoryAccordionItemProps) {
   const hasSubCategories = category.subCategories && category.subCategories.length > 0;
 
-  const handleDeleteWrapper = (id: number) => {
+  const handleDeleteWrapper = () => {
     onDelete(category);
   };
 
@@ -77,7 +77,7 @@ function CategoryAccordionItem({ category, level, onDelete }: CategoryAccordionI
 }
 
 function CategoryList({ initialCategories }: CategoryListProps) {
-  const [categories, setCategories] = useState<CategoryType[]>(initialCategories);
+  const [categories] = useState<CategoryType[]>(initialCategories);
   const deleteRef = useRef<DeleteCategoryRef>(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -90,7 +90,7 @@ function CategoryList({ initialCategories }: CategoryListProps) {
         label: 'Category'
       }
     ]));
-  }, []);
+  }, [dispatch]);
 
   const handleDelete = (category: CategoryType) => {
     deleteRef.current?.setCategory(category);
