@@ -1,3 +1,4 @@
+import Footer from "@/components/customer/footer";
 import Header from "@/components/customer/header";
 
 export default function CustomerLayout({
@@ -11,6 +12,7 @@ export default function CustomerLayout({
       <main>
         {children}
       </main>
+      <Footer />
     </>
   );
 }

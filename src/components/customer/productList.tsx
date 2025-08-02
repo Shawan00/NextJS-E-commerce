@@ -25,6 +25,7 @@ import {
 
 interface ProductListProps {
   initialProducts: ProductResponseType;
+  keyword?: string;
 }
 
 interface Sort {
@@ -32,7 +33,7 @@ interface Sort {
   sortOrder: "desc" | "asc";
 }
 
-function ProductList({ initialProducts }: ProductListProps) {
+function ProductList({ initialProducts, keyword }: ProductListProps) {
   const dispatch = useDispatch();
   const isMobile = useIsMobile();
   const [products, setProducts] = useState<ProductType[]>(initialProducts.data);
@@ -59,6 +60,7 @@ function ProductList({ initialProducts }: ProductListProps) {
         pageSize,
         sortField: sort.sortField,
         sortBy: sort.sortOrder,
+        name: keyword || undefined
       })
 
       if (response) {
@@ -72,7 +74,7 @@ function ProductList({ initialProducts }: ProductListProps) {
 
     fetchProducts();
 
-  }, [sort, page, pageSize]);
+  }, [sort, page, pageSize, keyword]);
 
   // Tính toán thông tin phân trang
   const totalPages = Math.ceil(total / pageSize);
@@ -197,7 +199,7 @@ function ProductList({ initialProducts }: ProductListProps) {
           </Select>
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 lg:gap-6 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6 mb-5">
         {isLoading ? (
           <>
             <Skeleton className="w-full h-88" />
@@ -219,7 +221,7 @@ function ProductList({ initialProducts }: ProductListProps) {
                       src={product.thumbnail}
                       alt={product.name}
                       fill
-                      sizes="100%"
+                      sizes="(min-width: 400px) 50vw, (min-width: 768px) 33vw, (min-width: 1024px) 20vw, (min-width: 1280px) 20vw, 50vw"
                       className="object-cover"
                     />
                     {product.discountPercent && (

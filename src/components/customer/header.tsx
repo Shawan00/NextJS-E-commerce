@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Logo from "./logo";
-import { Search, ShoppingCart, User, LogIn, UserPlus, Bell, History, LogOut } from "lucide-react";
+import { ShoppingCart, User, LogIn, UserPlus, Bell, History, LogOut } from "lucide-react";
 import { getAvatarFallback } from "@/helper/general";
 import MenuHeader from "./menu-header";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import SearchProduct from "./searchProduct";
 
 
 interface CustomerData {
@@ -65,10 +66,8 @@ export default function Header() {
         <MenuHeader />
 
         <div className="flex items-center gap-8">
-          <Link href={"/"} className="text-muted-foreground hover:text-foreground">
-            <Search />
-          </Link>
-          
+          <SearchProduct />
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="text-muted-foreground hover:text-foreground focus:outline-none">
@@ -94,7 +93,7 @@ export default function Header() {
                   </div>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href={`/me/profile/${customerData.id}`} className="cursor-pointer flex items-center gap-2">
+                    <Link href={`/me/profile`} className="cursor-pointer flex items-center gap-2">
                       <User className="h-4 w-4" />
                       <span>Profile</span>
                     </Link>
@@ -104,8 +103,10 @@ export default function Header() {
                     <span>Notification</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="cursor-pointer flex items-center gap-2">
-                    <History className="h-4 w-4" />
-                    <span>Order History</span>
+                    <Link href={"/me/order-history"} className="cursor-pointer flex items-center gap-2">
+                      <History className="h-4 w-4" />
+                      <span>Order History</span>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer flex items-center gap-2">
@@ -132,7 +133,7 @@ export default function Header() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Link href={"/cart"} 
+          <Link href={"/cart"}
             className="text-muted-foreground hover:text-foreground relative"
           >
             <ShoppingCart />

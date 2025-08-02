@@ -17,7 +17,7 @@ export default function Logo() {
             priority
           />
         </div>
-        <span className="text-3xl font-semibold">FurStore</span>
+        <span className="text-4xl font-medium">FurStore</span>
       </Link>
     </>
   );

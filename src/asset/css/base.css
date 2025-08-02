@@ -4,7 +4,30 @@
   }
 }
 
-@layer base {  
+@keyframes checkAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@layer base {
+  button {
+    @apply cursor-pointer;
+  }
+
+  button[disabled] {
+    @apply cursor-not-allowed;
+  }
+
   .hide-scrollbar {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -27,6 +50,10 @@
 
   .container-custom-sm {
     @apply px-2 sm:px-5 md:px-7 lg:px-9
+  }
+
+  .check-appear {
+    animation: checkAppear 0.6s ease-out forwards;
   }
 
 }

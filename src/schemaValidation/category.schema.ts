@@ -6,6 +6,7 @@ type Category = {
   name: string;
   thumbnail: string;
   subCategories?: Category[];
+  parentCategory?: Category;
 };
 
 export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
@@ -14,6 +15,7 @@ export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
     parentId: z.number().nullable(),
     name: z.string(),
     thumbnail: z.string(),
+    parentCategory: CategorySchema.optional(),
     subCategories: z.array(CategorySchema).optional(),
   }).strip()
 );

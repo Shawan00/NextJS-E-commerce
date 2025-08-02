@@ -61,7 +61,7 @@ function MenuHeader() {
                       </TabsTrigger>
                     ))}
                   </TabsList>
-                  <div className="w-fit">
+                  <nav className="w-fit">
                     {categories.map((category) => (
                       <TabsContent key={category.id} value={category.name}>
                         <ul className="flex gap-4">
@@ -69,13 +69,13 @@ function MenuHeader() {
                             <li key={subCategory.id}
                               className="flex-1 flex flex-col gap-2 w-28 text-sm"
                             >
-                              <Link href={`/categories/${subCategory.id}`}
+                              <Link href={`/category/${subCategory.id}`}
                                 className="py-2 font-medium text-accent border-b mb-2"
                               >
                                 {subCategory.name}
                               </Link>
                               {subCategory.subCategories?.map((subSubCategory) => (
-                                <Link key={subSubCategory.id} href={`/categories/${subSubCategory.id}`}
+                                <Link key={subSubCategory.id} href={`/category/${subSubCategory.id}`}
                                   className="text-sm text-primary hover:text-accent transition-colors"
                                 >
                                   {subSubCategory.name}
@@ -86,7 +86,7 @@ function MenuHeader() {
                         </ul>
                       </TabsContent>
                     ))}
-                  </div>
+                  </nav>
                 </Tabs>
               ) : (
                 <div className="p-4 text-center">

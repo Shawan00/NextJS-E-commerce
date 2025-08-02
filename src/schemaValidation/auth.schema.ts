@@ -56,7 +56,7 @@ export const ResetPasswordBody = z
 export type ResetPasswordBodyType = z.infer<typeof ResetPasswordBody>;
 
 export const Customer = z.object({
-  id: z.coerce.number(),
+  id: z.number().optional(),
   email: z.email(),
   fullName: z.string(),
   phone: z.string().nullable(),

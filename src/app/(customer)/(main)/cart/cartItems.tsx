@@ -149,7 +149,7 @@ function CartItems({ onNextStep }: Props) {
                     variant="ghost"
                     size="icon"
                     onClick={() => handleRemoveItem(item.product.id)}
-                    className="text-gray-400 hover:text-red-500"
+                    className="text-tertiary hover:text-red-500 hover:bg-transparent cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -162,7 +162,7 @@ function CartItems({ onNextStep }: Props) {
         {/* Continue Shopping */}
         <div className="mt-6">
           <Link href="/">
-            <Button variant="ghost" className="text-gray-600 hover:text-gray-900">
+            <Button variant="link">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Continue shopping
             </Button>

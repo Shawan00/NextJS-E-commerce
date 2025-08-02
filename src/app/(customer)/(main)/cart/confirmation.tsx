@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { BillingAddressType } from "@/schemaValidation/order.shema";
 import { RootState } from "@/store/store";
-import { ArrowLeft, CreditCard, Home, Phone, Truck } from "lucide-react";
+import { ArrowLeft, CreditCard, Home, Phone, Truck, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
+import { createOrder } from "@/service/order";
+import { clearCart } from "@/store/features/cartSlice";
+import { useState } from "react";
+import { showToast } from "@/helper/toast";
 
 interface Props {
   onPrevStep?: () => void;
@@ -18,6 +23,9 @@ const shippingCost = {
 
 function Confirmation({ onPrevStep, billingAddressData }: Props) {
   const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const subtotal = cartItems.reduce((total, item) => {
     return total + (item.product.price * item.quantity);
@@ -32,8 +40,33 @@ function Confirmation({ onPrevStep, billingAddressData }: Props) {
 
   const total = subtotal - discount + shipping;
 
+  const handleCompleteOrder = async () => {
+    setIsLoading(true);
+
+    const prepareData = {
+      ...billingAddressData,
+      subTotal: subtotal,
+      grandTotal: total,
+      shippingCost: shipping,
+      products: cartItems.map(item => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+      })),
+    }
+
+    const res = await createOrder(prepareData);
+    if (res.success) {
+      dispatch(clearCart());
+      showToast("success", res.message);
+      router.push(`/me/order-success/${res.orderId}`);
+    } else {
+      showToast("error", res.message);
+    }
+    setIsLoading(false);
+  }
+
   return (
-    <>
+    <div className="container-custom-lg">
       <Button
         variant="link"
         onClick={onPrevStep}
@@ -43,8 +76,8 @@ function Confirmation({ onPrevStep, billingAddressData }: Props) {
         Back To Billing & Address
       </Button>
 
-      <div className="grid grid-cols-1 md:grid-cols-11 gap-2 md:gap-4">
-        <div className="md:col-span-3 flex flex-col gap-2 md:gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-8 gap-2 md:gap-4 auto-cols-fr">
+        <div className="md:col-span-3 flex flex-col gap-2 md:gap-4 order-2 md:order-1">
           <div className="p-2 md:p-4 bg-secondary-background rounded-md flex flex-col gap-2">
             <p className="text-xl font-semibold mb-2">Information</p>
             <p className="flex gap-2 items-end text-muted-foreground"><Home /> {billingAddressData.address}</p>
@@ -81,16 +114,25 @@ function Confirmation({ onPrevStep, billingAddressData }: Props) {
 
           <Button
             className="w-full py-5 uppercase cursor-pointer"
+            onClick={handleCompleteOrder}
+            disabled={isLoading || cartItems.length === 0}
           >
-            Complete Order
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              "Complete Order"
+            )}
           </Button>
         </div>
 
-        <div className="md:col-span-5 bg-muted rounded-md p-2 md:p-4">
+        <div className="md:col-span-5 bg-muted rounded-md p-2 md:p-4 order-1 md:order-2">
           <p className="text-xl font-semibold mb-4">Order Items</p>
           <div className="space-y-4">
             {cartItems.map((item) => (
-              <div key={item.product.id} className="flex items-start gap-4">
+              <div key={item.product.id} className="flex items-start gap-4 pb-4 border-b border-gray-400 last:border-b-0">
                 <div className="relative size-20">
                   <Image
                     src={item.product.thumbnail}
@@ -104,25 +146,16 @@ function Confirmation({ onPrevStep, billingAddressData }: Props) {
                   </div>
                 </div>
                 <strong className="text-lg font-medium">{item.product.name}</strong>
+                <div className="text-muted-foreground flex-1 flex flex-col self-end items-end">
+                  {item.product.discountPercent && <del>${item.product.price}</del>}
+                  <span className="font-medium">${item.product.price * (1 - item.product.discountPercent / 100)}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
-
-        <div className="md:col-span-3 bg-muted rounded-md p-2 md:p-4">
-          <label
-            className="label-custom mb-2"
-            htmlFor="note"
-          >NOTE</label>
-          <textarea
-            id="note"
-            placeholder="Add a note to the order"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            rows={8}
-          />
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 
