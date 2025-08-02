@@ -1,5 +1,5 @@
 import { http } from "@/lib/htpp";
-import { Customer, RegisterBody, RegisterBodyType } from "@/schemaValidation/auth.schema";
+import { CustomerLoginResType, RegisterBody } from "@/schemaValidation/auth.schema";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,25 +15,25 @@ export async function POST(req: NextRequest) {
         }
       }, { status: 401 })
     }
-    const response = await http.post<RegisterBodyType>('/auth/register', parsedData.data)
+    const response = await http.post<CustomerLoginResType>('/auth/register', parsedData.data)
   
     try {
-      if (response.status === 200 && 'customer' in response.payload) {
+      if (response.status === 201 && 'customer' in response.payload) {
         const cookieStore = await cookies();
         cookieStore.set({
           name: 'customer',
-          value: JSON.stringify(Customer.parse(response.payload.customer)),
+          value: JSON.stringify(response.payload.customer),
           httpOnly: true,
           path: "/",
           secure: true
         })
       }
       return NextResponse.json(response, { status: response.status })
-    } catch {
+    } catch (error) {
       return NextResponse.json({
         status: 400,
         payload: {
-          message: "Something wrong with server or database"
+          message: error instanceof Error ? error.message : "Something wrong with server or database"
         }
       }, { status: 400 })
     } 

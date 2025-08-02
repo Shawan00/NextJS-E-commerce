@@ -51,7 +51,7 @@ function Banner() {
             </p>
             <Link href="/product"
               className='bg-transparent border-2 border-green-200 text-green-200 text-sm sm:text-lg font-medium
-              px-4 py-2 block w-fit mx-auto rounded-sm hover:bg-accent hover:text-secondary transition-all duration-300'
+              px-4 py-2 block w-fit mx-auto rounded-sm hover:bg-green-200 hover:text-primary transition-all duration-300'
             >
               Discover Now
             </Link>
