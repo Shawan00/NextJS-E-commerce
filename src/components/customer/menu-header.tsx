@@ -12,17 +12,12 @@ function MenuHeader() {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getCategories();
-        if (data) {
-          setCategories(data);
-        }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      } finally {
-        setIsLoading(false);
+      setIsLoading(true);
+      const data = await getCategories();
+      if (data) {
+        setCategories(data);
       }
+      setIsLoading(false);
     };
 
     fetchCategories();
