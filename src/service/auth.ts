@@ -1,7 +1,8 @@
 "use client";
 
 import { showToast } from "@/helper/toast";
-import { LoginBodyType, RegisterBodyType } from "@/schemaValidation/auth.schema"
+import { http } from "@/lib/htpp";
+import { ForgotPasswordBodyType, LoginBodyType, RegisterBodyType, ResetPasswordBodyType } from "@/schemaValidation/auth.schema"
 import { redirect } from "next/navigation";
 import { SubmitHandler } from "react-hook-form";
 
@@ -56,5 +57,25 @@ export const customerRegister: SubmitHandler<RegisterBodyType> = async (data) =>
     redirect("/");
   } else {
     showToast('error', res.payload.message);
+  }
+}
+
+export const customerForgotPassword: SubmitHandler<ForgotPasswordBodyType> = async (data) => {
+  const res = await http.post<{message: string}>('/auth/forgot-password', data);
+  if (res.status === 200) {
+    redirect(`/reset-password?email=${data.email}`);
+  } else {
+    showToast('error', res.payload.message || 'Failed to send OTP');
+  }
+}
+
+export const customerResetPassword: SubmitHandler<ResetPasswordBodyType> = async (data) => {
+  const res = await http.post<{message: string}>('/auth/reset-password', data);
+  console.log(res, data)
+  if (res.status === 200) {
+    showToast('success', res.payload.message);
+    redirect('/login');
+  } else {
+    showToast('error', res.payload.message || 'Failed to reset password');
   }
 }

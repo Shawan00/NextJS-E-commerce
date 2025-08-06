@@ -3,7 +3,10 @@ const request = async<Response>(
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
   body?: Record<string, unknown> | undefined | FormData
 ) => {
-  const headers: { [key: string]: string } = body instanceof FormData ? {} : { 'Content-Type': 'application/json' };
+  const headers = {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache'
+  }
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`

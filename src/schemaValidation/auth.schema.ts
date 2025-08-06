@@ -39,13 +39,14 @@ export type ForgotPasswordBodyType = z.infer<typeof ForgotPasswordBody>;
 
 export const ResetPasswordBody = z
   .object({
-    otp: z.coerce.string().min(1, "OTP is required"),
-    password: passwordSchema,
-    confirmPassword: z.coerce.string()
+    email: z.email(),
+    otp: z.string().length(6, "OTP must be 6 digits"),
+    newPassword: passwordSchema,
+    confirmPassword: z.string()
   })
   .strict()
   .check((ctx) => {
-    if (ctx.value.password !== ctx.value.confirmPassword) {
+    if (ctx.value.newPassword !== ctx.value.confirmPassword) {
       ctx.issues.push({
         code: "custom",
         message: `Password does not match`,

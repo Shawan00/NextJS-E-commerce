@@ -1,5 +1,10 @@
 import Link from "next/link";
 import RegisterForm from "./registerForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Register | FurStore",
+};
 
 export default function RegisterPage() {
   return (

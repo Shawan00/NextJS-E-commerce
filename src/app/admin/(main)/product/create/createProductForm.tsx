@@ -79,7 +79,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
       const fileArray = Array.from(files);
       setValue("images", fileArray, { shouldValidate: true });
 
-      // Create previews for images
       const previews: string[] = [];
       fileArray.forEach(file => {
         if (file.type.startsWith('image/')) {
@@ -102,7 +101,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     const newPreviews = imagePreviews.filter((_, i) => i !== index);
     setImagePreviews(newPreviews);
     
-    // Also update form value
     const currentImages = (document.getElementById('images') as HTMLInputElement)?.files;
     if (currentImages) {
       const fileArray = Array.from(currentImages);
@@ -111,7 +109,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     }
   };
 
-  // Hàm tìm category gốc từ initialCategories
   const findCategoryInTree = (categoryId: number, cats: CategoryType[] = initialCategories): CategoryType | null => {
     for (const cat of cats) {
       if (cat.id === categoryId) {
@@ -125,7 +122,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     return null;
   };
 
-  // Hàm tìm tất cả category cha của một category
   const findParentCategories = (categoryId: number): number[] => {
     const parents: number[] = [];
     const category = findCategoryInTree(categoryId);
@@ -136,7 +132,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     return parents;
   };
 
-  // Hàm tìm tất cả category con của một category
   const findChildCategories = (categoryId: number, cats: CategoryType[] = initialCategories): number[] => {
     const children: number[] = [];
     
@@ -157,13 +152,11 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
     let updatedCategories = [...selectedCategories];
     
     if (selectedCategories.includes(categoryId)) {
-      // Bỏ chọn: loại bỏ category này và tất cả category con
       const childrenToRemove = findChildCategories(categoryId);
       updatedCategories = updatedCategories.filter(id => 
         id !== categoryId && !childrenToRemove.includes(id)
       );
     } else {
-      // Chọn: thêm category này và tất cả category cha
       const parentsToAdd = findParentCategories(categoryId);
       updatedCategories = [...new Set([...updatedCategories, categoryId, ...parentsToAdd])];
     }
@@ -174,7 +167,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
 
   const onSubmit = async (data: ProductBodyType) => {
     try {
-      // Upload thumbnail
       const thumbnailFormData = new FormData();
       thumbnailFormData.append('files', data.thumbnail);
       const thumbnailUrls = await uploadFile(thumbnailFormData);
@@ -183,7 +175,6 @@ function CreateProductForm({ initialCategories }: { initialCategories: CategoryT
         throw new Error("Failed to upload thumbnail");
       }
       
-      // Upload images
       const imagesFormData = new FormData();
       data.images.forEach(image => {
         imagesFormData.append('files', image);

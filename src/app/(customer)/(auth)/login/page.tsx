@@ -1,5 +1,10 @@
 import Link from "next/link";
 import LoginForm from "./loginForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login | FurStore",
+};
 
 const LoginPage = () => {
   return (

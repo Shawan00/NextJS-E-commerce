@@ -31,6 +31,7 @@
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "input-otp": "^1.4.2",
     "jsonwebtoken": "^9.0.2",
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.525.0",

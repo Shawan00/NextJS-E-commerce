@@ -4,17 +4,10 @@ import { http } from "@/lib/htpp"
 import { CategoryResponseType, CategoryType } from "@/schemaValidation/category.schema"
 
 export const getCategories = async (): Promise<CategoryType[] | null> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/category`, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache'
-    }
-  })
+  const response = await http.get<CategoryResponseType>("/category");
 
-  const data: CategoryResponseType = await response.json()
-
-  if (response.status === 200) {
-    return data.data
+  if (response.status === 200 && 'data' in response.payload) {
+    return response.payload.data
   }
   return null
 }

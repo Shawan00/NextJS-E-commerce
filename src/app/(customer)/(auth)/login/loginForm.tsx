@@ -55,7 +55,7 @@ const LoginForm = () => {
             Password
           </label>
           <Link
-            href="#"
+            href="/forgot-password"
             className="text-sm text-[var(--tertiary)] hover:underline"
           >
             Forgot password?
