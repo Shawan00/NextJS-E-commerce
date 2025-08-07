@@ -13,6 +13,14 @@ const jost = Jost({
 export const metadata: Metadata = {
   title: "Home page | FurStore",
   description: "FurStore is a platform for selling luxury furniture products",
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/favicon-32x32.png',
+  },
 };
 
 export default function RootLayout({
