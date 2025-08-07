@@ -7,51 +7,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Clock, Package, CheckCircle, XCircle, Calendar, MapPin, Phone, ShoppingBag, Truck, Banknote } from "lucide-react";
+import { Calendar, MapPin, Phone, ShoppingBag, Truck, Banknote, Clock, Package, CheckCircle, XCircle } from "lucide-react";
 import Image from "next/image";
 import CancelOrderButton from "./CancelOrderButton";
+import { statusConfig } from "@/helper/dataConfig";
 
 interface Props {
   orders: OrderType[]
 }
-
-const statusConfig = {
-  pending: {
-    label: "Pending",
-    icon: Clock,
-    color: "bg-amber-50 text-amber-700 border-amber-200",
-    bgColor: "bg-gradient-to-r from-amber-50 to-orange-50",
-    dotColor: "bg-amber-500"
-  },
-  processing: {
-    label: "Processing",
-    icon: Package,
-    color: "bg-blue-50 text-blue-700 border-blue-200",
-    bgColor: "bg-gradient-to-r from-blue-50 to-indigo-50",
-    dotColor: "bg-blue-500"
-  },
-  delivering: {
-    label: "In Transit",
-    icon: Truck,
-    color: "bg-purple-50 text-purple-700 border-purple-200",
-    bgColor: "bg-gradient-to-r from-purple-50 to-violet-50",
-    dotColor: "bg-purple-500"
-  },
-  completed: {
-    label: "Delivered",
-    icon: CheckCircle,
-    color: "bg-green-50 text-green-700 border-green-200",
-    bgColor: "bg-gradient-to-r from-green-50 to-emerald-50",
-    dotColor: "bg-green-500"
-  },
-  cancelled: {
-    label: "Cancelled",
-    icon: XCircle,
-    color: "bg-red-50 text-red-700 border-red-200",
-    bgColor: "bg-gradient-to-r from-red-50 to-rose-50",
-    dotColor: "bg-red-500"
-  }
-};
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('en-US', {

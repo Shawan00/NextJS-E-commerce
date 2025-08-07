@@ -2,8 +2,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getOrderById, OrderType } from '@/service/order'
-import { CheckCircle, MapPin, Phone, CreditCard, Bike, Plane, Banknote, Palette, User, Truck } from 'lucide-react'
+import { CheckCircle, MapPin, Phone, User, Truck } from 'lucide-react'
 import { Metadata } from 'next'
+import { deliveryOptions, paymentOptions } from '@/helper/dataConfig'
 
 export const metadata: Metadata = {
   title: 'Order successfull | FurStore'
@@ -25,19 +26,6 @@ const MapPinIcon = ({ className }: { className: string }) => (
 const PhoneIcon = ({ className }: { className: string }) => (
   <Phone className={className} />
 )
-
-// Delivery and payment options from billingAdress.tsx
-const deliveryOptions = [
-  { id: "free", value: "free", name: "Free", price: "$0", description: "5-7 days delivery", icon: <Bike className="w-4 h-4" /> },
-  { id: "standard", value: "standard", name: "Standard", price: "$10", description: "3-5 days delivery", icon: <Truck className="w-4 h-4" /> },
-  { id: "express", value: "express", name: "Express", price: "$20", description: "2-3 days delivery", icon: <Plane className="w-4 h-4" /> }
-]
-
-const paymentOptions = [
-  { id: "cash", value: "cash", name: "Cash", description: "Pay with cash when your order is delivered.", icon: <Banknote className="w-4 h-4" /> },
-  { id: "paypal", value: "paypal", name: "Pay with Paypal", description: "You will be redirected to PayPal website to complete your purchase securely.", icon: <Palette className="w-4 h-4" /> },
-  { id: "card", value: "card", name: "Credit / Debit card", description: "We support Mastercard, Visa, Discover and Stripe.", icon: <CreditCard className="w-4 h-4" /> }
-]
 
 export default async function OrderSuccess({ params }: { params: Promise<{ orderId: string }> }) {
   const { orderId } = await params;
@@ -158,14 +146,18 @@ export default async function OrderSuccess({ params }: { params: Promise<{ order
                 </div>
               </div>
               <div className="flex items-center">
-                <span className="mr-2 text-gray-400">{deliveryOption?.icon}</span>
+                <span className="mr-2 text-gray-400">
+                  {deliveryOption?.icon && <deliveryOption.icon className="w-4 h-4" />}
+                </span>
                 <div>
                   <span className="text-sm text-gray-600">Delivery Method: </span>
                   <span className="text-gray-900">{deliveryOption?.name} ({deliveryOption?.description})</span>
                 </div>
               </div>
               <div className="flex items-center">
-                <span className="mr-2 text-gray-400">{paymentOption?.icon}</span>
+                <span className="mr-2 text-gray-400">
+                  {paymentOption?.icon && <paymentOption.icon className="w-4 h-4" />}
+                </span>
                 <div>
                   <span className="text-sm text-gray-600">Payment Method: </span>
                   <span className="text-gray-900">{paymentOption?.name}</span>

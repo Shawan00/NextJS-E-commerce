@@ -116,6 +116,14 @@ export const getOrdersByCustomer = async (params?: OrderParamsType): Promise<Ord
   return null;
 }
 
+export const getOrders = async (params?: OrderParamsType): Promise<OrderListResponseType | null> => {
+  const res = await http.get<OrderListResponseType>(`/order`, params);
+  if (res.status === 200 && 'data' in res.payload) {
+    return res.payload;
+  }
+  return null;
+}
+
 export const updateOrderStatus = async (orderId: number, status: "pending" | "processing" | "delivering" | "completed" | "cancelled"): Promise<BooleanResponse> => {
   const res = await http.patch<{message: string}>(`/order/${orderId}`, { status });
   if (res.status === 200 && 'message' in res.payload) {

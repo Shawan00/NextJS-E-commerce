@@ -1,26 +1,12 @@
 "use client";
 
 import * as React from "react"
-import {
-  BookOpen,
-  Bot,
-  Command,
-  SquareTerminal,
-} from "lucide-react"
-
+import { Armchair, Command, ListTree, ShoppingBasket, User } from "lucide-react"
 import { NavMain } from "@/components/admin/nav-main"
 import { NavProjects } from "@/components/admin/nav-projects"
 import { NavSecondary } from "@/components/admin/nav-secondary"
 import { NavUser } from "@/components/admin/nav-user"
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar"
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 import { useRouter } from "next/navigation";
 
 const data = {
@@ -28,7 +14,7 @@ const data = {
     {
       title: "Products",
       url: "/admin/product",
-      icon: SquareTerminal,
+      icon: Armchair,
       isActive: true,
       items: [
         {
@@ -44,7 +30,7 @@ const data = {
     {
       title: "Categories",
       url: "/admin/category",
-      icon: Bot,
+      icon: ListTree,
       isActive: true,
       items: [
         {
@@ -59,17 +45,33 @@ const data = {
     },
     {
       title: "Orders",
-      url: "orders",
-      icon: BookOpen,
+      url: "/admin/order",
+      icon: ShoppingBasket,
       isActive: true,
       items: [
         {
-          title: "List",
-          url: "/admin/orders",
+          title: "All",
+          url: "/admin/order",
         },
         {
-          title: "Attention",
-          url: "/admin/orders/attention",
+          title: "Pending",
+          url: "/admin/order/pending",
+        },
+        {
+          title: "Processing",
+          url: "/admin/order/processing",
+        },
+        {
+          title: "Delivering",
+          url: "/admin/order/delivering",
+        },
+        {
+          title: "Completed",
+          url: "/admin/order/completed",
+        },
+        {
+          title: "Cancelled",
+          url: "/admin/order/cancelled",
         }
       ],
     },
@@ -77,7 +79,7 @@ const data = {
       title: "Users",
       url: "/admin/user",
       isActive: true,
-      icon: BookOpen,
+      icon: User,
       items: [
         {
           title: "Admin",
@@ -138,7 +140,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Command className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
+                  <span className="truncate font-medium">FurStore</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
               </a>
