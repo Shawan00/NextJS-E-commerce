@@ -76,26 +76,22 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
 
   }, [sort, page, pageSize, keyword]);
 
-  // Tính toán thông tin phân trang
   const totalPages = Math.ceil(total / pageSize);
 
-  // Hàm xử lý thay đổi trang
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages && newPage !== page) {
       setPage(newPage);
     }
   };
 
-  // Hàm xử lý thay đổi pageSize
   const handlePageSizeChange = (newPageSize: string) => {
     const size = parseInt(newPageSize);
     if (size !== pageSize) {
       setPageSize(size);
-      setPage(1); // Reset về trang đầu khi thay đổi kích thước trang
+      setPage(1);
     }
   };
 
-  // Tạo array các số trang để hiển thị
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 5;
@@ -145,7 +141,6 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="3">3</SelectItem>
                 <SelectItem value="8">8</SelectItem>
                 <SelectItem value="12">12</SelectItem>
                 <SelectItem value="16">16</SelectItem>
@@ -199,7 +194,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
           </Select>
         </div>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 lg:gap-6 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6 mb-5">
         {isLoading ? (
           <>
             <Skeleton className="w-full h-88" />
@@ -264,7 +259,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
                   </div>
                   <div className="px-4 py-3 h-28">
                     <span className="text-xs mb-2 text-muted-foreground">{product.sku}</span>
-                    <h2 className="text-lg font-bold">{product.name}</h2>
+                    <h2 className="text-lg font-bold line-clamp-1">{product.name}</h2>
                     <div className="flex items-center gap-2 justify-end">
                       <strong className="text-accent">{new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(product.price * (1 - product.discountPercent / 100))}</strong>
                       {product.discountPercent && (

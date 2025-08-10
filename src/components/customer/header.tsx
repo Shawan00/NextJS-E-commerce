@@ -59,13 +59,13 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-background shadow-sm mx-auto px-6 py-4
+      <header className="bg-background shadow-sm mx-auto px-2 lg:px-6 py-4
         flex items-center justify-between relative z-10"
       >
         <Logo />
         <MenuHeader />
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 sm:gap-8">
           <SearchProduct />
 
           <DropdownMenu>

@@ -260,7 +260,7 @@ export default async function OrderSuccess({ params }: { params: Promise<{ order
             Continue Shopping
           </Link>
           <Link
-            href="/me/orders"
+            href="/me/order-history"
             className="px-6 py-3 bg-accent text-white rounded-lg hover:bg-accent/90 transition-colors font-medium text-center"
           >
             View My Orders

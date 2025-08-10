@@ -4,8 +4,8 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-accent-foreground container-custom-lg pt-10 pb-5">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-5">
+    <footer className="bg-accent-foreground container-custom-lg pt-10 pb-5 text-sm sm:text-base">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 lg:gap-10 mb-5">
         <section className="flex flex-col gap-5">
           <Logo />
           <p className="flex items-center gap-2">
@@ -20,7 +20,7 @@ export default function Footer() {
         </section>
 
         <nav className="flex flex-col gap-5">
-          <h5 className="text-2xl font-medium my-1.5">About Us</h5>
+          <h5 className="text-xl sm:text-2xl font-medium my-1.5">About Us</h5>
           <ul className="flex flex-col gap-5">
             <li>
               <Link href="/about">Our Team</Link>
@@ -35,7 +35,7 @@ export default function Footer() {
         </nav>
 
         <nav className="flex flex-col gap-5">
-          <h5 className="text-2xl font-medium my-1.5">Customer Service</h5>
+          <h5 className="text-xl sm:text-2xl font-medium my-1.5">Customer Service</h5>
           <ul className="flex flex-col gap-5">
             <li>
               <Link href="/">Home</Link>
@@ -50,7 +50,7 @@ export default function Footer() {
         </nav>
 
         <nav className="flex flex-col gap-5">
-          <h5 className="text-2xl font-medium my-1.5">Support</h5>
+          <h5 className="text-xl sm:text-2xl font-medium my-1.5">Support</h5>
           <ul className="flex flex-col gap-5">
             <li>
               <Link href="#" className="pointer-events-none">FAQ</Link>

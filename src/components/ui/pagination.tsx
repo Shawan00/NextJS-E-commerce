@@ -67,13 +67,20 @@ function PaginationLink({
 
 function PaginationPrevious({
   className,
+  onClick,
+  href,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentProps<typeof PaginationLink> & { 
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  href?: string;
+}) {
   return (
     <PaginationLink
       aria-label="Go to previous page"
       size="default"
       className={cn("gap-1 px-2.5 sm:pl-2.5", className)}
+      onClick={onClick}
+      href={href}
       {...props}
     >
       <ChevronLeftIcon />
@@ -84,13 +91,20 @@ function PaginationPrevious({
 
 function PaginationNext({
   className,
+  onClick,
+  href,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) {
+}: React.ComponentProps<typeof PaginationLink> & { 
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  href?: string;
+}) {
   return (
     <PaginationLink
       aria-label="Go to next page"
       size="default"
       className={cn("gap-1 px-2.5 sm:pr-2.5", className)}
+      onClick={onClick}
+      href={href}
       {...props}
     >
       <span className="hidden sm:block">Next</span>

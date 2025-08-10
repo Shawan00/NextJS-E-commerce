@@ -26,7 +26,6 @@ function SearchProduct() {
       return;
     }
 
-    setIsLoading(true);
     const response = await getProducts({
       name: query,
       page: 1,
@@ -38,12 +37,14 @@ function SearchProduct() {
     } else {
       setSearchResults([]);
     }
+
     setIsLoading(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
+    setIsLoading(true);
 
     if (debounceTimer.current) {
       clearTimeout(debounceTimer.current);
@@ -56,7 +57,6 @@ function SearchProduct() {
       }, 800);
     } else {
       setSearchResults([]);
-      setIsLoading(false);
     }
   };
 
@@ -99,7 +99,7 @@ function SearchProduct() {
         <SheetHeader className="pb-0">
           <SheetTitle>Search Products</SheetTitle>
         </SheetHeader>
-        <form className="container-custom-lg mt-4" onSubmit={handleSearchSubmit}>
+        <form className="mt-4" onSubmit={handleSearchSubmit}>
           <div className="flex gap-2 xl:gap-4 relative">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -113,7 +113,7 @@ function SearchProduct() {
             </div>
             <Button type="submit">Search</Button>
           </div>
-          
+
           {isDropdownOpen && (
             <div className="absolute top-full left-1/10 right-1/10 z-50 mt-2 bg-white border border-gray-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
               {isLoading ? (
@@ -134,13 +134,15 @@ function SearchProduct() {
                       }}
                       className="flex items-center space-x-3 p-3 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
-                      <Image
-                        src={product.thumbnail}
-                        alt={product.name}
-                        width={70}
-                        height={70}
-                        className="object-cover rounded"
-                      />
+                      <div className="size-17 overflow-hidden">
+                        <Image
+                          src={product.thumbnail}
+                          alt={product.name}
+                          width={70}
+                          height={70}
+                          className="object-cover rounded"
+                        />
+                      </div>
                       <div className="flex-1">
                         <p className="font-medium text-sm">{product.name}</p>
                         <div className="flex items-center gap-2">

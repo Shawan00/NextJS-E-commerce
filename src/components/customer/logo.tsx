@@ -7,7 +7,7 @@ export default function Logo() {
       <Link href={"/"}
         className="flex gap-2 items-center"
       >
-        <div className="relative w-18 aspect-44/21">
+        <div className="relative w-12 sm:w-14 lg:w-18 aspect-44/21">
           <Image
             src={"/logo.png"}
             alt="Logo"
@@ -17,7 +17,7 @@ export default function Logo() {
             priority
           />
         </div>
-        <span className="text-4xl font-medium">FurStore</span>
+        <span className="text-xl sm:text-2xl lg:text-4xl font-medium">FurStore</span>
       </Link>
     </>
   );

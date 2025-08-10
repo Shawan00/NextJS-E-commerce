@@ -3,10 +3,9 @@ import { BillingAddressType } from "@/schemaValidation/order.shema";
 import { RootState } from "@/store/store";
 import { ArrowLeft, CreditCard, Home, Phone, Truck, Loader2 } from "lucide-react";
 import Image from "next/image";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import { createOrder } from "@/service/order";
-import { clearCart } from "@/store/features/cartSlice";
 import { useState } from "react";
 import { showToast } from "@/helper/toast";
 
@@ -23,7 +22,6 @@ const shippingCost = {
 
 function Confirmation({ onPrevStep, billingAddressData }: Props) {
   const cartItems = useSelector((state: RootState) => state.cart.items);
-  const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -56,7 +54,6 @@ function Confirmation({ onPrevStep, billingAddressData }: Props) {
 
     const res = await createOrder(prepareData);
     if (res.success) {
-      dispatch(clearCart());
       showToast("success", res.message);
       router.push(`/me/order-success/${res.orderId}`);
     } else {

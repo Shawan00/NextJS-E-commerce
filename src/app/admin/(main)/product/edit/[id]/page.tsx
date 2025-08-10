@@ -2,6 +2,11 @@ import { getCategories } from "@/service/category";
 import { getProductById } from "@/service/product";
 import EditProductForm from "./editProductForm";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Edit Product | Manage FurStore",
+};
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
