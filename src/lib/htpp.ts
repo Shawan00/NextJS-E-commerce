@@ -5,6 +5,7 @@ const request = async<Response>(
 ) => {
   const headers = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-store'
   }
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -15,7 +16,10 @@ const request = async<Response>(
       method,
       headers,
       body: body instanceof FormData ? body : JSON.stringify(body),
-      cache: method === 'GET' ? 'default' : 'no-store'
+      cache: method === 'GET' ? 'default' : 'no-store',
+      next: {
+        revalidate: 0
+      }
     });
     const payload: Response = await res.json();
     return {
