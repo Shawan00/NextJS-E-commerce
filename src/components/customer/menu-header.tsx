@@ -93,10 +93,15 @@ function MenuHeader() {
           <NavigationMenuItem>
             <NavigationMenuTrigger className="text-base font-normal">OTHER PAGES</NavigationMenuTrigger>
             <NavigationMenuContent>
-              <ul className="w-[200px] flex flex-col gap-4">
+              <ul className="flex flex-col">
                 <li>
                   <NavigationMenuLink asChild>
                     <Link href={"/about"}>About Us</Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link href={"/contact"}>Contact Us</Link>
                   </NavigationMenuLink>
                 </li>
               </ul>

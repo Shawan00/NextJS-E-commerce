@@ -26,9 +26,9 @@ interface Sort {
   sortOrder: "desc" | "asc";
 }
 
-interface priceRange {
-  fromAmount: string;
-  toAmount: string;
+interface PriceRange {
+  fromAmount?: string;
+  toAmount?: string;
 }
 
 function ProductList({ initialProducts, keyword }: ProductListProps) {
@@ -42,7 +42,10 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
     sortField: "createdAt",
     sortOrder: "desc",
   });
-  const [priceRange, setPriceRange] = useState<priceRange | null>(null);
+  const [priceRange, setPriceRange] = useState<PriceRange>({
+    fromAmount: undefined,
+    toAmount: undefined
+  });
   const [isLoading, setIsLoading] = useState(false);
   const isFirstRender = useRef(true);
 
@@ -60,8 +63,8 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
         sortField: sort.sortField,
         sortBy: sort.sortOrder,
         name: keyword || undefined,
-        fromAmount: priceRange?.fromAmount || undefined,
-        toAmount: priceRange?.toAmount || undefined
+        fromAmount: priceRange.fromAmount || undefined,
+        toAmount: priceRange.toAmount || undefined
       })
 
       if (response) {
@@ -136,7 +139,10 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
     if (fromAmount || toAmount) {
       setPriceRange({ fromAmount, toAmount });
     } else {
-      setPriceRange(null);
+      setPriceRange({
+        fromAmount: undefined,
+        toAmount: undefined
+      });
     }
   };
 
@@ -170,8 +176,10 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" role="combobox" className="bg-transparent">
-                  <span className="w-30 text-left font-normal overflow-hidden text-ellipsis whitespace-nowrap">
-                    {priceRange ? `$${priceRange.fromAmount || 0} - ${priceRange.toAmount || "End"}` : "All"}
+                  <span className="w-30 text-left font-normal overflow-hidden text-ellipsis flex items-center gap-1">
+                    <span>${priceRange.fromAmount || 0}</span>
+                    <span className="text-sm"><Minus className="size-3" /></span>
+                    <span>{priceRange.toAmount || "End"}</span>
                   </span>
                   <ChevronDown className="w-4 h-4" />
                 </Button>
@@ -185,7 +193,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
                         type="number"
                         placeholder="From"
                         name="fromAmount"
-                        defaultValue={priceRange?.fromAmount || ""}
+                        defaultValue={priceRange.fromAmount || ""}
                         className="w-15 focus:outline-none text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                         min={0}
                       />
@@ -197,7 +205,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
                         type="number"
                         placeholder="To"
                         name="toAmount"
-                        defaultValue={priceRange?.toAmount || ""}
+                        defaultValue={priceRange.toAmount || ""}
                         className="w-15 focus:outline-none text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
                         min={0}
                       />
@@ -206,7 +214,11 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
 
                   <div className="flex items-center gap-3">
                     <Button variant="outline" className="flex-1"
-                      onClick={() => setPriceRange(null)}
+                      type="reset"
+                      onClick={() => setPriceRange({
+                        fromAmount: undefined,
+                        toAmount: undefined
+                      })}
                     >
                       Clear
                     </Button>

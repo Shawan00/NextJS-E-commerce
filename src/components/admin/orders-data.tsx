@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"; import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"; import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Package, Truck, CheckCircle, XCircle, Clock, RefreshCw } from "lucide-react";
-import { formatNumberWithDots } from "@/helper/general";
+import { formatDateToString, formatNumberWithDots } from "@/helper/general";
 import { showToast } from "@/helper/toast";
 import { Skeleton } from "../ui/skeleton";
 import { useDispatch } from "react-redux";
@@ -223,7 +223,7 @@ export function OrdersData({ data, variant }: Props) {
                         ${formatNumberWithDots(order.grandTotal)}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {order.createdAt}
+                        {formatDateToString(order.createdAt)}
                       </TableCell>
                       <TableCell>
                         {!isCancelled && !isCompleted ? (

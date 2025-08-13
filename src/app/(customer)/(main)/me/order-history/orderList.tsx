@@ -11,6 +11,7 @@ import { Calendar, MapPin, Phone, ShoppingBag, Truck, Banknote, Clock, Package, 
 import Image from "next/image";
 import CancelOrderButton from "./CancelOrderButton";
 import { statusConfig } from "@/helper/dataConfig";
+import { formatDateToString } from "@/helper/general";
 
 interface Props {
   orders: OrderType[]
@@ -71,7 +72,7 @@ function OrderList({ orders }: Props) {
               <Calendar className="w-5 h-5 text-gray-600 flex-shrink-0" />
               <div className="min-w-0">
                 <p className="text-xs text-gray-500 font-medium">Order Date</p>
-                <p className="text-sm font-semibold">{order.createdAt}</p>
+                <p className="text-sm font-semibold">{formatDateToString(order.createdAt)}</p>
               </div>
             </div>
             

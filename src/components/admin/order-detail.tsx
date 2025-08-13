@@ -2,7 +2,7 @@ import { OrderType } from "@/service/order";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { formatNumberWithDots } from "@/helper/general";
+import { formatDateToString, formatNumberWithDots } from "@/helper/general";
 import { User, ShoppingBag, CreditCard } from "lucide-react";
 import { statusConfig, deliveryMethodConfig, paymentMethodConfig } from "@/helper/dataConfig";
 import Image from "next/image";
@@ -45,7 +45,7 @@ function OrderDetail({ order, setOrder }: Props) {
             </div>
             <div className="text-right">
               <p className="text-sm text-muted-foreground">Order Date</p>
-              <p className="font-medium">{order.createdAt}</p>
+              <p className="font-medium">{formatDateToString(order.createdAt)}</p>
             </div>
           </div>
 

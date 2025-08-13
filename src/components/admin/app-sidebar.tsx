@@ -74,22 +74,6 @@ const data = {
           url: "/admin/order/cancelled",
         }
       ],
-    },
-    {
-      title: "Users",
-      url: "/admin/user",
-      isActive: true,
-      icon: User,
-      items: [
-        {
-          title: "Admin",
-          url: "/admin/admin",
-        },
-        {
-          title: "Customer",
-          url: "/admin/customer",
-        }
-      ],
     }
   ],
   navSecondary: [],
