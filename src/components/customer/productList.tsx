@@ -4,7 +4,7 @@ import { ProductResponseType, ProductType } from "@/schemaValidation/product.sch
 import { getProducts } from "@/service/product";
 import { useEffect, useRef, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { Minus, ShoppingCart } from "lucide-react";
+import { ChevronDown, Minus, ShoppingCart } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,15 +13,8 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "@/store/features/cartSlice";
 import { showToast } from "@/helper/toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from "../ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationEllipsis } from "../ui/pagination";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "../ui/dropdown-menu";
 
 interface ProductListProps {
   initialProducts: ProductResponseType;
@@ -31,6 +24,11 @@ interface ProductListProps {
 interface Sort {
   sortField: "name" | "price" | "stock" | "discountPercent" | "createdAt";
   sortOrder: "desc" | "asc";
+}
+
+interface priceRange {
+  fromAmount: string;
+  toAmount: string;
 }
 
 function ProductList({ initialProducts, keyword }: ProductListProps) {
@@ -44,6 +42,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
     sortField: "createdAt",
     sortOrder: "desc",
   });
+  const [priceRange, setPriceRange] = useState<priceRange | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const isFirstRender = useRef(true);
 
@@ -60,7 +59,9 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
         pageSize,
         sortField: sort.sortField,
         sortBy: sort.sortOrder,
-        name: keyword || undefined
+        name: keyword || undefined,
+        fromAmount: priceRange?.fromAmount || undefined,
+        toAmount: priceRange?.toAmount || undefined
       })
 
       if (response) {
@@ -74,7 +75,7 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
 
     fetchProducts();
 
-  }, [sort, page, pageSize, keyword]);
+  }, [sort, page, pageSize, priceRange, keyword]);
 
   const totalPages = Math.ceil(total / pageSize);
 
@@ -127,9 +128,21 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
     return pages;
   };
 
+  const handleApplyPriceRange = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const fromAmount = formData.get("fromAmount") as string;
+    const toAmount = formData.get("toAmount") as string;
+    if (fromAmount || toAmount) {
+      setPriceRange({ fromAmount, toAmount });
+    } else {
+      setPriceRange(null);
+    }
+  };
+
   return (
     <>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5">
+      <div className="flex flex-col-reverse lg:flex-row items-start lg:items-center justify-between gap-4 mb-5">
         <div className="flex items-center gap-4">
           <span className="font-medium">
             Showing {((page - 1) * pageSize) + 1}-{Math.min(page * pageSize, total)} of {total} results
@@ -151,47 +164,105 @@ function ProductList({ initialProducts, keyword }: ProductListProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <strong>Sort by</strong>
-          <Select
-            value={`${sort.sortField}-${sort.sortOrder}`}
-            onValueChange={(value) => {
-              setSort({
-                sortField: value.split("-")[0] as "name" | "price" | "discountPercent" | "createdAt",
-                sortOrder: value.split("-")[1] as "asc" | "desc",
-              });
-            }}
-          >
-            <SelectTrigger className="w-fit">
-              <SelectValue placeholder="Select sort field" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="name-asc">
-                Alphabetically, A-Z
-              </SelectItem>
-              <SelectItem value="name-desc">
-                Alphabetically, Z-A
-              </SelectItem>
-              <SelectItem value="price-asc">
-                Price, Low to High
-              </SelectItem>
-              <SelectItem value="price-desc">
-                Price, High to Low
-              </SelectItem>
-              <SelectItem value="discountPercent-asc">
-                Discount, Low to High
-              </SelectItem>
-              <SelectItem value="discountPercent-desc">
-                Discount, High to Low
-              </SelectItem>
-              <SelectItem value="createdAt-asc">
-                Date, old to new
-              </SelectItem>
-              <SelectItem value="createdAt-desc">
-                Date, new to old
-              </SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-2">
+            <strong>Price Range</strong>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" role="combobox" className="bg-transparent">
+                  <span className="w-30 text-left font-normal overflow-hidden text-ellipsis whitespace-nowrap">
+                    {priceRange ? `$${priceRange.fromAmount || 0} - ${priceRange.toAmount || "End"}` : "All"}
+                  </span>
+                  <ChevronDown className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="p-5" align="start">
+                <form onSubmit={handleApplyPriceRange}>
+                  <div className="flex items-center justify-between gap-3 mb-3">
+                    <div className="flex-1 flex items-center gap-1 border border-border p-2 rounded-sm">
+                      <span>$</span>
+                      <input
+                        type="number"
+                        placeholder="From"
+                        name="fromAmount"
+                        defaultValue={priceRange?.fromAmount || ""}
+                        className="w-15 focus:outline-none text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                        min={0}
+                      />
+                    </div>
+                    <span className="text-sm"><Minus className="size-3" /></span>
+                    <div className="flex-1 flex items-center gap-1 border border-border p-2 rounded-sm">
+                      <span>$</span>
+                      <input
+                        type="number"
+                        placeholder="To"
+                        name="toAmount"
+                        defaultValue={priceRange?.toAmount || ""}
+                        className="w-15 focus:outline-none text-sm [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield]"
+                        min={0}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <Button variant="outline" className="flex-1"
+                      onClick={() => setPriceRange(null)}
+                    >
+                      Clear
+                    </Button>
+                    <Button
+                      className="flex-1 bg-accent hover:bg-accent/90"
+                      type="submit"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </form>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <div className="flex items-center gap-2">
+            <strong>Sort by</strong>
+            <Select
+              value={`${sort.sortField}-${sort.sortOrder}`}
+              onValueChange={(value) => {
+                setSort({
+                  sortField: value.split("-")[0] as "name" | "price" | "discountPercent" | "createdAt",
+                  sortOrder: value.split("-")[1] as "asc" | "desc",
+                });
+              }}
+            >
+              <SelectTrigger className="w-fit">
+                <SelectValue placeholder="Select sort field" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="name-asc">
+                  Alphabetically, A-Z
+                </SelectItem>
+                <SelectItem value="name-desc">
+                  Alphabetically, Z-A
+                </SelectItem>
+                <SelectItem value="price-asc">
+                  Price, Low to High
+                </SelectItem>
+                <SelectItem value="price-desc">
+                  Price, High to Low
+                </SelectItem>
+                <SelectItem value="discountPercent-asc">
+                  Discount, Low to High
+                </SelectItem>
+                <SelectItem value="discountPercent-desc">
+                  Discount, High to Low
+                </SelectItem>
+                <SelectItem value="createdAt-asc">
+                  Date, old to new
+                </SelectItem>
+                <SelectItem value="createdAt-desc">
+                  Date, new to old
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-6 mb-5">

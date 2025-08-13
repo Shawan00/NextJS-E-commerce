@@ -18,7 +18,7 @@ const request = async<Response>(
       body: body instanceof FormData ? body : JSON.stringify(body),
       cache: method === 'GET' ? 'default' : 'no-store',
       next: {
-        revalidate: 0
+        revalidate: 30
       }
     });
     const payload: Response = await res.json();
@@ -27,12 +27,12 @@ const request = async<Response>(
       payload
     }
   } catch (error) {
-    console.log("API Erorr", error)
+    console.log("API Error", error)
     return {
       status: 500,
       payload: {
         error,
-        message: "An unknow error"
+        message: "An unknown error"
       }
     }
   }

@@ -36,6 +36,17 @@ export const getProductById = async (id: number): Promise<ProductType | null> =>
   return null;
 }
 
+export const getBestSellers = async (): Promise<ProductResponseType | null> => {
+  const res = await http.get<ProductResponseType>('/products/best-seller', {
+    page: 1,
+    pageSize: 9
+  });
+  if (res.status === 200 && 'data' in res.payload) {
+    return res.payload;
+  }
+  return null;
+}
+
 export const updateProduct = async (id: number, productData: ProductUpdateDataType): Promise<{ success: boolean, message?: string }> => {
   const res = await http.patch<ProductType>(`/products/${id}`, productData);
   if (res.status === 200) {

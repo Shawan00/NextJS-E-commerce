@@ -35,7 +35,7 @@ export default function HomePage() {
                 NEW <strong className="font-semibold bg-linear-to-r from-green-400 to-green-800 text-transparent bg-clip-text">PLANTS</strong>
               </h2>
               <p className="text-muted-foreground mb-[20%]">Sale up to 30% off</p>
-              <Link href="/product"
+              <Link href="/category/11"
                 className="block w-fit text-green-600 font-medium border-2 border-green-600 
                   px-4 py-2 rounded-sm hover:bg-green-600 hover:text-white transition-color duration-300"
               >
@@ -56,7 +56,7 @@ export default function HomePage() {
                 CHAIN <strong className="font-semibold bg-linear-to-r from-yellow-400 to-orange-600 text-transparent bg-clip-text">LAMP</strong>
               </h2>
               <p className="text-muted mb-[20%]">Sale up to 40% off</p>
-              <Link href="/product"
+              <Link href="/category/15"
                 className="block w-fit text-yellow-600 font-medium border-2 border-yellow-600 
                   px-4 py-2 rounded-sm hover:bg-yellow-600 hover:text-white transition-color duration-300"
               >
@@ -78,7 +78,7 @@ export default function HomePage() {
                 SOFT <strong className="font-semibold bg-linear-to-r from-gray-400 to-gray-800 text-transparent bg-clip-text">SOFA</strong>
               </h2>
               <p className="text-primary mb-[20%]">Sale up to 20% off</p>
-              <Link href="/product"
+              <Link href="/category/6"
                 className="block w-fit text-gray-600 font-medium border-2 border-gray-600 
                   px-4 py-2 rounded-sm hover:bg-gray-600 hover:text-white transition-color duration-300"
               >

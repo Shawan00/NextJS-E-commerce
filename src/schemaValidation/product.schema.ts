@@ -76,5 +76,7 @@ export const ProductParams = z.object({
   category: z.string().optional(),
   sortField: z.enum(['createdAt', 'name', 'price', 'stock', 'discountPercent']).optional(),
   sortBy: z.enum(['asc', 'desc']).optional(),
+  fromAmount: z.string().optional(),
+  toAmount: z.string().optional(),
 })
 export type ProductParamsType = z.infer<typeof ProductParams>;
