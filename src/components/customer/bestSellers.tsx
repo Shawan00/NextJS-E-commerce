@@ -1,6 +1,8 @@
 import { getBestSellers } from "@/service/product";
 import ProductCard from "./productCard";
 
+export const dynamic = 'force-dynamic';
+
 export default async function BestSellers() {
   const products = await getBestSellers()
 
