@@ -66,7 +66,7 @@ function CartItems({ onNextStep }: Props) {
         </h2>
 
         {/* Table Header */}
-        <div className="grid grid-cols-12 gap-4 pb-4 border-b text-sm font-medium text-gray-500">
+        <div className="hidden md:grid grid-cols-12 gap-4 pb-4 border-b text-sm font-medium text-gray-500">
           <div className="col-span-5">Product</div>
           <div className="col-span-2">Price</div>
           <div className="col-span-3">Quantity</div>
@@ -80,79 +80,158 @@ function CartItems({ onNextStep }: Props) {
             const itemTotal = originalPrice * item.quantity;
 
             return (
-              <div key={item.product.id} className="grid grid-cols-12 gap-4 py-4 border-b">
-                {/* Product Info */}
-                <div className="col-span-5 flex items-center space-x-4">
-                  <Image
-                    src={item.product.thumbnail}
-                    alt={item.product.name}
-                    width={64}
-                    height={64}
-                    className="w-16 h-16 object-cover rounded-lg"
-                    priority={false}
-                  />
-                  <Link href={`/product/${item.product.id}`} 
-                    className="font-medium"
-                  >
-                    {item.product.name}
-                  </Link>
-                </div>
-
-                {/* Price */}
-                <div className="col-span-2 flex items-center">
-                  <span className="font-medium">${originalPrice.toFixed(2)}</span>
-                </div>
-
-                {/* Quantity Controls */}
-                <div className="col-span-3 flex flex-col justify-center items-start">
-                  <div className="flex items-center border rounded-md">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
-                      disabled={item.quantity <= 1}
-                      className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </Button>
-                    <Input
-                      type="number"
-                      value={item.quantity}
-                      onChange={(e) => handleQuantityChange(item.product.id, parseInt(e.target.value) || 1)}
-                      className="w-10 text-center border-0 rounded-none h-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] focus-visible:ring-0 focus-visible:border-0"
-                      min="1"
-                      max={item.product.stock}
+              <div key={item.product.id} className="border rounded-lg p-4">
+                {/* Mobile Layout */}
+                <div className="md:hidden space-y-4">
+                  {/* Product Info */}
+                  <div className="flex items-center space-x-4">
+                    <Image
+                      src={item.product.thumbnail}
+                      alt={item.product.name}
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-cover rounded-lg flex-shrink-0"
+                      priority={false}
                     />
+                    <div className="flex-1 min-w-0">
+                      <Link href={`/product/${item.product.id}`} 
+                        className="font-medium text-sm line-clamp-2 hover:text-primary"
+                      >
+                        {item.product.name}
+                      </Link>
+                      <div className="text-sm text-gray-500 mt-1">
+                        ${originalPrice.toFixed(2)}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quantity Controls */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center border rounded-md">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.product.id, parseInt(e.target.value) || 1)}
+                        className="w-12 text-center border-0 rounded-none h-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] focus-visible:ring-0 focus-visible:border-0"
+                        min="1"
+                        max={item.product.stock}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                        className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
+                        disabled={item.quantity >= item.product.stock}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      Stock: {item.product.stock}
+                    </div>
+                  </div>
+
+                  {/* Total Price and Actions */}
+                  <div className="flex items-center justify-between pt-2 border-t">
+                    <div className="text-right">
+                      <div className="text-sm text-gray-500">Total</div>
+                      <div className="font-semibold text-lg">${itemTotal.toFixed(2)}</div>
+                    </div>
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
-                      className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
-                      disabled={item.quantity >= item.product.stock}
+                      onClick={() => handleRemoveItem(item.product.id)}
+                      className="text-tertiary hover:text-red-500 hover:bg-transparent cursor-pointer"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </Button>
                   </div>
-                  <div className="ml-2 text-sm text-gray-500">
-                    available: {item.product.stock}
+                </div>
+
+                {/* Desktop Layout */}
+                <div className="hidden md:grid grid-cols-12 gap-4 py-4 border-b border-0">
+                  {/* Product Info */}
+                  <div className="col-span-5 flex items-center space-x-4">
+                    <Image
+                      src={item.product.thumbnail}
+                      alt={item.product.name}
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 object-cover rounded-lg"
+                      priority={false}
+                    />
+                    <Link href={`/product/${item.product.id}`} 
+                      className="font-medium"
+                    >
+                      {item.product.name}
+                    </Link>
                   </div>
-                </div>
 
-                {/* Total Price */}
-                <div className="col-span-1 flex items-center">
-                  <span className="font-medium">${itemTotal.toFixed(2)}</span>
-                </div>
+                  {/* Price */}
+                  <div className="col-span-2 flex items-center">
+                    <span className="font-medium">${originalPrice.toFixed(2)}</span>
+                  </div>
 
-                {/* Delete Button */}
-                <div className="col-span-1 flex items-center justify-end">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemoveItem(item.product.id)}
-                    className="text-tertiary hover:text-red-500 hover:bg-transparent cursor-pointer"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  {/* Quantity Controls */}
+                  <div className="col-span-3 flex flex-col justify-center items-start">
+                    <div className="flex items-center border rounded-md">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                        disabled={item.quantity <= 1}
+                        className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
+                      >
+                        <Minus className="w-4 h-4" />
+                      </Button>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(item.product.id, parseInt(e.target.value) || 1)}
+                        className="w-10 text-center border-0 rounded-none h-8 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none [-moz-appearance:textfield] focus-visible:ring-0 focus-visible:border-0"
+                        min="1"
+                        max={item.product.stock}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                        className="h-8 w-8 rounded-none border-0 hover:bg-transparent hover:text-primary"
+                        disabled={item.quantity >= item.product.stock}
+                      >
+                        <Plus className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="ml-2 text-sm text-gray-500">
+                      available: {item.product.stock}
+                    </div>
+                  </div>
+
+                  {/* Total Price */}
+                  <div className="col-span-1 flex items-center">
+                    <span className="font-medium">${itemTotal.toFixed(2)}</span>
+                  </div>
+
+                  {/* Delete Button */}
+                  <div className="col-span-1 flex items-center justify-end">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRemoveItem(item.product.id)}
+                      className="text-tertiary hover:text-red-500 hover:bg-transparent cursor-pointer"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             );

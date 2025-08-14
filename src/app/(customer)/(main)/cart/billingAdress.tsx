@@ -107,7 +107,7 @@ function BillingAndAddress({ onNextStep, onPrevStep }: Props) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Contact Information */}
-          <div>
+          <div className="order-3 lg:order-1">
             <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
             
             <div className="space-y-4">

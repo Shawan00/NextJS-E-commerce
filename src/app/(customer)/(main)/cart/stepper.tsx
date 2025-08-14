@@ -73,7 +73,7 @@ function Stepper() {
   return (
     <div className="w-full">
       {/* Stepper Navigation */}
-      <div className="flex items-center justify-center mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-center gap-2 sm:gap-0 mb-8">
         {steps.map((step, stepIdx) => (
           <div key={step.id} className="flex items-center">
             {/* Step Circle */}
@@ -110,7 +110,7 @@ function Stepper() {
 
             {/* Connector Line */}
             {stepIdx < steps.length - 1 && (
-              <div className={`ml-6 mr-6 w-16 h-0.5 ${
+              <div className={`hidden sm:block ml-6 mr-6 w-16 h-0.5 ${
                 steps[stepIdx + 1].status === 'completed' || step.status === 'completed' 
                   ? 'bg-accent' 
                   : 'bg-gray-200'
