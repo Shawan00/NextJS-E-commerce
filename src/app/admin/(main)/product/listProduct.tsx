@@ -46,13 +46,15 @@ import {
 } from "@/components/ui/pagination";
 import { ProductType, ProductParamsType } from "@/schemaValidation/product.schema";
 import { formatDateToString, formatNumberWithDots, resizeImage } from "@/helper/general";
-import { getProducts } from "@/service/product";
+import { getProducts, updateProduct } from "@/service/product";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDispatch } from "react-redux";
 import { setBreadcrumb } from "@/store/features/breadcrumbSlice";
 import DeleteProduct, { DeleteProductRef } from "./deleteProduct";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Switch } from "@/components/ui/switch";
+import { showToast } from "@/helper/toast";
 
 interface ListProductProps {
   initialProductResponse: {
@@ -294,6 +296,44 @@ function ListProduct({ initialProductResponse }: ListProductProps) {
           </div>
         );
       },
+    },
+    {
+      accessorKey: "isBestSeller",
+      header: "Best Seller",
+      cell: ({ row }) => {
+        const product = row.original;
+        const isBestSeller = row.getValue("isBestSeller") as boolean;
+        const handleToggleBestSeller = async (checked: boolean) => {
+          const updateData = {
+            name: product.name,
+            thumbnail: product.thumbnail,
+            sku: product.sku,
+            price: product.price,
+            stock: product.stock,
+            description: product.description,
+            discountPercent: product.discountPercent,
+            images: product.images.map(img => img.imageUrl),
+            categories: product.categories.map(cat => cat.id),
+            isBestSeller: checked
+          };
+
+          const result = await updateProduct(product.id, updateData);
+          if (result.success) {
+            showToast('success', 'Product updated successfully');
+            setData(prev => prev.map(item => item.id === product.id ? { ...item, isBestSeller: checked } : item));
+          } else {
+            showToast('error', result.message || 'Failed to update product');
+          }
+        };
+
+        return (
+          <Switch
+            checked={isBestSeller}
+            onCheckedChange={handleToggleBestSeller}
+          />
+        );
+      },
+      enableSorting: false,
     },
     {
       id: "actions",

@@ -4,6 +4,8 @@ import Link from "next/link";
 import ListProduct from "./listProduct";
 import { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Product | Manage FurStore",
 };

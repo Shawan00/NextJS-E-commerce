@@ -62,6 +62,7 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
       description: initialProduct.description || "",
       discountPercent: initialProduct.discountPercent,
       categories: initialProduct.categories.map(cat => cat.id),
+      isBestSeller: initialProduct.isBestSeller,
     }
   });
 
@@ -249,7 +250,8 @@ function EditProductForm({ initialProduct, initialCategories }: EditProductFormP
       description: data.description || "",
       discountPercent: data.discountPercent,
       images: imageUrls,
-      categories: selectedCategories
+      categories: selectedCategories,
+      isBestSeller: data.isBestSeller,
     };
 
     const result = await updateProduct(initialProduct.id, productData);

@@ -18,6 +18,7 @@ export const ProductSchema = z.object({
   images: z.array(ImageSchema),
   categories: z.array(CategorySchema),
   createdAt: z.string(),
+  isBestSeller: z.boolean(),
 }).strip()
 export type ProductType = z.infer<typeof ProductSchema>;
 
@@ -46,6 +47,7 @@ export const ProductEditBody = z.object({
   images: z.array(z.instanceof(File, { message: "Please select a valid image file" })).optional(),
   categories: z.array(z.number()),
   createdAt: z.string().optional(),
+  isBestSeller: z.boolean(),
 }).strip();
 export type ProductEditBodyType = z.infer<typeof ProductEditBody>;
 
@@ -59,6 +61,7 @@ export type ProductUpdateDataType = {
   discountPercent: number;
   images: string[];
   categories: number[];
+  isBestSeller: boolean;
 };
 
 export const ProductResponse = z.object({

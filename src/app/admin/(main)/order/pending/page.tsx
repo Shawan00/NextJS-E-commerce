@@ -2,6 +2,8 @@ import { OrdersData } from "@/components/admin/orders-data";
 import { getOrders } from "@/service/order";
 import { Metadata } from "next"
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Pending Orders | Manage FurStore",
 };

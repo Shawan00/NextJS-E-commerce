@@ -4,6 +4,8 @@ import EditProductForm from "./editProductForm";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Edit Product | Manage FurStore",
 };

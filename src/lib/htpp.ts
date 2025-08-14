@@ -17,9 +17,9 @@ const request = async<Response>(
       headers,
       body: body instanceof FormData ? body : JSON.stringify(body),
       cache: method === 'GET' ? 'default' : 'no-store',
-      next: {
-        revalidate: 10
-      }
+      // next: {
+      //   revalidate: 0
+      // }
     });
     const payload: Response = await res.json();
     return {

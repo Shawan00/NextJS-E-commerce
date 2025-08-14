@@ -2,6 +2,8 @@ import { getCategories } from "@/service/category";
 import CreateProductForm from "./createProductForm";
 import { Metadata } from "next";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: "Create Product | Manage FurStore",
 };
