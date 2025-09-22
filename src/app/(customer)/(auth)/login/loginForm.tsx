@@ -35,6 +35,7 @@ const LoginForm = () => {
           type="email"
           id="email"
           placeholder="test@example.com"
+          defaultValue="test@gmail.com"
           autoComplete="email"
           className="w-full px-4 py-2 border border-gray-300 rounded-lg"
           {...register('email')}
@@ -66,6 +67,7 @@ const LoginForm = () => {
             type={showPassword ? "text" : "password"}
             id="password"
             placeholder="••••••••"
+            defaultValue='Test@1234.'
             autoComplete="current-password"
             {...register("password")}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg"
